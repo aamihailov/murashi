@@ -1,24 +1,16 @@
 from rest_framework import serializers
-from articles.models import Article
+from articles.models import Client
 
 
-class ArticlePreviewSerializer(serializers.ModelSerializer):
+class ClientSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Article
+        model = Client
         fields = [
             'id',
-            'title',
-            'created_at',
-            'announce',
+            'user',
+            'name',
+            'phone',
+            'debt',
+            'note',
             'url',
-        ]
-
-
-class ArticleDetailSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Article
-        fields = [
-            'title',
-            'created_at',
-            'text',
         ]

@@ -4,7 +4,7 @@ import autoprefixer from 'autoprefixer'
 
 
 export default {
-    entry:  './web_client/app.js',
+    entry:  './web_client/index.jsx',
     output:  {
         path: `${__dirname}/main/static`,
         filename: 'app.js'

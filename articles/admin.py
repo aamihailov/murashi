@@ -1,7 +1,7 @@
 from django.contrib import admin
-from .models import Article
+from .models import Client
 
 
-@admin.register(Article)
-class ArticleAdmin(admin.ModelAdmin):
-    list_display = ['title', 'created_at']
+@admin.register(Client)
+class ClientAdmin(admin.ModelAdmin):
+    pass

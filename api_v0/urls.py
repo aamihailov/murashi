@@ -3,7 +3,7 @@ from .views import *
 
 
 router = DefaultRouter()
-router.register(r'articles', ArticleViewSet)
+router.register(r'clients', ClientViewSet)
 
 
 urlpatterns = router.urls
