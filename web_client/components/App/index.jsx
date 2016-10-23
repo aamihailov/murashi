@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Router, Route, IndexRoute, browserHistory } from 'react-router'
 import LayoutBase from '../LayoutBase'
-import Main from '../Main'
+import EmptyPage from '../EmptyPage'
 import ClientsPage from '../ClientsPage'
 
 class App extends Component {
@@ -9,21 +9,21 @@ class App extends Component {
     return (
       <Router history={ browserHistory }>
         <Route path="/" component={ LayoutBase }>
-          <IndexRoute component={ Main } />
-          <Route path="schedule" component={ Main } />
+          <IndexRoute component={ EmptyPage } />
+          <Route path="schedule" component={ EmptyPage } />
 
           <Route path="client" component={ ClientsPage } />
 
-          <Route path="trainer" component={ Main } />
-          <Route path="group" component={ Main } />
-          <Route path="train-type" component={ Main } />
-          <Route path="subscription" component={ Main } />
-          <Route path="location" component={ Main } />
+          <Route path="trainer" component={ EmptyPage } />
+          <Route path="group" component={ EmptyPage } />
+          <Route path="train-type" component={ EmptyPage } />
+          <Route path="subscription" component={ EmptyPage } />
+          <Route path="location" component={ EmptyPage } />
 
-          <Route path="salary-plan" component={ Main } />
-          <Route path="discount" component={ Main } />
-          <Route path="debtors" component={ Main } />
-          <Route path="cashout" component={ Main } />
+          <Route path="salary-plan" component={ EmptyPage } />
+          <Route path="discount" component={ EmptyPage } />
+          <Route path="debtors" component={ EmptyPage } />
+          <Route path="cashout" component={ EmptyPage } />
         </Route>
       </Router>
     );

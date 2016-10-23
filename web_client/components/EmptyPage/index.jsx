@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { PageHeader } from 'react-bootstrap'
 
-class Page extends Component {
+class EmptyPage extends Component {
   render(){
     return(
       <div>
@@ -11,4 +11,4 @@ class Page extends Component {
   }
 }
 
-export default Page
+export default EmptyPage
