@@ -10,7 +10,7 @@ class ClientSerializer(serializers.ModelSerializer):
             'user',
             'name',
             'phone',
-            'debt',
+            'balance',
             'note',
             'url',
         ]

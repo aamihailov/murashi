@@ -6,7 +6,7 @@ var SCHEMA = {
     {id: "id", name: "#", readonly: true},
     {id: "name", name: "Имя"},
     {id: "phone", name: "Телефон"},
-    {id: "debt", name: "Долг", readonly: true},
+    {id: "balance", name: "Баланс"},
     {id: "note", name: "Примечание"}
   ],
   strings: {

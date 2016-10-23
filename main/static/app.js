@@ -48102,7 +48102,7 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var SCHEMA = {
-	  fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Имя" }, { id: "phone", name: "Телефон" }, { id: "debt", name: "Долг", readonly: true }, { id: "note", name: "Примечание" }],
+	  fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Имя" }, { id: "phone", name: "Телефон" }, { id: "balance", name: "Баланс" }, { id: "note", name: "Примечание" }],
 	  strings: {
 	    page_header: "Клиенты",
 	    add_label: "Добавить клиента",
