@@ -3,6 +3,10 @@ import { Router, Route, IndexRoute, browserHistory } from 'react-router'
 import LayoutBase from '../LayoutBase'
 import EmptyPage from '../EmptyPage'
 import ClientsPage from '../ClientsPage'
+import TrainersPage from '../TrainersPage'
+import TrainTypesPage from '../TrainTypesPage'
+import LocationsPage from '../LocationsPage'
+import SubscriptionsPage from '../SubscriptionsPage'
 
 class App extends Component {
   render() {
@@ -14,11 +18,11 @@ class App extends Component {
 
           <Route path="client" component={ ClientsPage } />
 
-          <Route path="trainer" component={ EmptyPage } />
+          <Route path="trainer" component={ TrainersPage } />
           <Route path="group" component={ EmptyPage } />
-          <Route path="train-type" component={ EmptyPage } />
-          <Route path="subscription" component={ EmptyPage } />
-          <Route path="location" component={ EmptyPage } />
+          <Route path="train-type" component={ TrainTypesPage } />
+          <Route path="subscription" component={ SubscriptionsPage } />
+          <Route path="location" component={ LocationsPage } />
 
           <Route path="salary-plan" component={ EmptyPage } />
           <Route path="discount" component={ EmptyPage } />

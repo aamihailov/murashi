@@ -21534,6 +21534,22 @@
 
 	var _ClientsPage2 = _interopRequireDefault(_ClientsPage);
 
+	var _TrainersPage = __webpack_require__(590);
+
+	var _TrainersPage2 = _interopRequireDefault(_TrainersPage);
+
+	var _TrainTypesPage = __webpack_require__(591);
+
+	var _TrainTypesPage2 = _interopRequireDefault(_TrainTypesPage);
+
+	var _LocationsPage = __webpack_require__(592);
+
+	var _LocationsPage2 = _interopRequireDefault(_LocationsPage);
+
+	var _SubscriptionsPage = __webpack_require__(593);
+
+	var _SubscriptionsPage2 = _interopRequireDefault(_SubscriptionsPage);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var App = function (_Component) {
@@ -21556,11 +21572,11 @@
 	          _react2.default.createElement(_reactRouter.IndexRoute, { component: _EmptyPage2.default }),
 	          _react2.default.createElement(_reactRouter.Route, { path: 'schedule', component: _EmptyPage2.default }),
 	          _react2.default.createElement(_reactRouter.Route, { path: 'client', component: _ClientsPage2.default }),
-	          _react2.default.createElement(_reactRouter.Route, { path: 'trainer', component: _EmptyPage2.default }),
+	          _react2.default.createElement(_reactRouter.Route, { path: 'trainer', component: _TrainersPage2.default }),
 	          _react2.default.createElement(_reactRouter.Route, { path: 'group', component: _EmptyPage2.default }),
-	          _react2.default.createElement(_reactRouter.Route, { path: 'train-type', component: _EmptyPage2.default }),
-	          _react2.default.createElement(_reactRouter.Route, { path: 'subscription', component: _EmptyPage2.default }),
-	          _react2.default.createElement(_reactRouter.Route, { path: 'location', component: _EmptyPage2.default }),
+	          _react2.default.createElement(_reactRouter.Route, { path: 'train-type', component: _TrainTypesPage2.default }),
+	          _react2.default.createElement(_reactRouter.Route, { path: 'subscription', component: _SubscriptionsPage2.default }),
+	          _react2.default.createElement(_reactRouter.Route, { path: 'location', component: _LocationsPage2.default }),
 	          _react2.default.createElement(_reactRouter.Route, { path: 'salary-plan', component: _EmptyPage2.default }),
 	          _react2.default.createElement(_reactRouter.Route, { path: 'discount', component: _EmptyPage2.default }),
 	          _react2.default.createElement(_reactRouter.Route, { path: 'debtors', component: _EmptyPage2.default }),
@@ -48694,6 +48710,194 @@
 	}(_react.Component);
 
 	exports.default = EmptyPage;
+
+/***/ },
+/* 590 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _CrudPage = __webpack_require__(588);
+
+	var _CrudPage2 = _interopRequireDefault(_CrudPage);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var SCHEMA = {
+	  fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Имя" }, { id: "phone", name: "Телефон" }, { id: "balance", name: "Баланс" }, { id: "note", name: "Примечание" }],
+	  strings: {
+	    page_header: "Тренеры",
+	    add_label: "Добавить тренера",
+	    edit_label: "Редактировать тренера",
+	    add_label_short: "Добавить",
+	    update_label_short: "Обновить",
+	    delete_label_short: "Удалить"
+	  },
+	  urls: {
+	    api_root: "http://localhost:5000/api/v0/trainers/?format=json",
+	    api_element: "http://localhost:5000/api/v0/trainers/{0}/?format=json"
+	  }
+	};
+
+	var Page = _react2.default.createClass({
+	  displayName: 'Page',
+	  render: function render() {
+	    return _react2.default.createElement(_CrudPage2.default, { strings: SCHEMA.strings, schema: SCHEMA.fields, urls: SCHEMA.urls, data: [] });
+	  }
+	});
+
+	exports.default = Page;
+
+/***/ },
+/* 591 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _CrudPage = __webpack_require__(588);
+
+	var _CrudPage2 = _interopRequireDefault(_CrudPage);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var SCHEMA = {
+	  fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Название" }, { id: "note", name: "Примечание" }],
+	  strings: {
+	    page_header: "Типы тренировок",
+	    add_label: "Добавить тип тренировок",
+	    edit_label: "Редактировать тип тренировок",
+	    add_label_short: "Добавить",
+	    update_label_short: "Обновить",
+	    delete_label_short: "Удалить"
+	  },
+	  urls: {
+	    api_root: "http://localhost:5000/api/v0/train-types/?format=json",
+	    api_element: "http://localhost:5000/api/v0/train-types/{0}/?format=json"
+	  }
+	};
+
+	var Page = _react2.default.createClass({
+	  displayName: 'Page',
+	  render: function render() {
+	    return _react2.default.createElement(_CrudPage2.default, { strings: SCHEMA.strings, schema: SCHEMA.fields, urls: SCHEMA.urls, data: [] });
+	  }
+	});
+
+	exports.default = Page;
+
+/***/ },
+/* 592 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _CrudPage = __webpack_require__(588);
+
+	var _CrudPage2 = _interopRequireDefault(_CrudPage);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var SCHEMA = {
+	  fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Название" }, { id: "note", name: "Примечание" }],
+	  strings: {
+	    page_header: "Залы",
+	    add_label: "Добавить зал",
+	    edit_label: "Редактировать зал",
+	    add_label_short: "Добавить",
+	    update_label_short: "Обновить",
+	    delete_label_short: "Удалить"
+	  },
+	  urls: {
+	    api_root: "http://localhost:5000/api/v0/locations/?format=json",
+	    api_element: "http://localhost:5000/api/v0/locations/{0}/?format=json"
+	  }
+	};
+
+	var Page = _react2.default.createClass({
+	  displayName: 'Page',
+	  render: function render() {
+	    return _react2.default.createElement(_CrudPage2.default, { strings: SCHEMA.strings, schema: SCHEMA.fields, urls: SCHEMA.urls, data: [] });
+	  }
+	});
+
+	exports.default = Page;
+
+/***/ },
+/* 593 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _CrudPage = __webpack_require__(588);
+
+	var _CrudPage2 = _interopRequireDefault(_CrudPage);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	//            'id',
+	//            'name',
+	//            'visits',
+	//            'validDays',
+	//            'price',
+	//            'note',
+	//            'url'
+
+	var SCHEMA = {
+	  fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Название" }, { id: "visits", name: "Занятий" }, { id: "validDays", name: "Срок действия" }, { id: "price", name: "Стоимость" }, { id: "note", name: "Примечание" }],
+	  strings: {
+	    page_header: "Абонементы",
+	    add_label: "Добавить абонемент",
+	    edit_label: "Редактировать абонемент",
+	    add_label_short: "Добавить",
+	    update_label_short: "Обновить",
+	    delete_label_short: "Удалить"
+	  },
+	  urls: {
+	    api_root: "http://localhost:5000/api/v0/subscriptions/?format=json",
+	    api_element: "http://localhost:5000/api/v0/subscriptions/{0}/?format=json"
+	  }
+	};
+
+	var Page = _react2.default.createClass({
+	  displayName: 'Page',
+	  render: function render() {
+	    return _react2.default.createElement(_CrudPage2.default, { strings: SCHEMA.strings, schema: SCHEMA.fields, urls: SCHEMA.urls, data: [] });
+	  }
+	});
+
+	exports.default = Page;
 
 /***/ }
 /******/ ]);
