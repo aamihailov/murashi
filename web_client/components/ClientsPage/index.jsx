@@ -7,7 +7,7 @@ var SCHEMA = {
     {id: "name", name: "Имя"},
     {id: "phone", name: "Телефон"},
     {id: "balance", name: "Баланс"},
-    {id: "note", name: "Примечание"}
+    {id: "note", name: "Примечание", type: "textarea"}
   ],
   strings: {
     page_header: "Клиенты",

@@ -48118,7 +48118,7 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var SCHEMA = {
-	  fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Имя" }, { id: "phone", name: "Телефон" }, { id: "balance", name: "Баланс" }, { id: "note", name: "Примечание" }],
+	  fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Имя" }, { id: "phone", name: "Телефон" }, { id: "balance", name: "Баланс" }, { id: "note", name: "Примечание", type: "textarea" }],
 	  strings: {
 	    page_header: "Клиенты",
 	    add_label: "Добавить клиента",
@@ -48409,6 +48409,62 @@
 	  }
 	});
 
+	var MyAddFormRow = _react2.default.createClass({
+	  displayName: 'MyAddFormRow',
+	  getInitialState: function getInitialState() {
+	    return { formOptions: [] };
+	  },
+	  render: function render() {
+	    var control;
+	    var formOptions;
+	    switch (this.props.type) {
+	      case 'textarea':
+	        control = _react2.default.createElement(_reactBootstrap.FormControl, { componentClass: 'textarea', placeholder: this.props.name, value: this.props.value });
+	        break;
+	      case 'select':
+	        var formOptions = [];
+	        formOptions.push(_react2.default.createElement(
+	          'option',
+	          { key: 0, value: 0 },
+	          '...'
+	        ));
+	        this.state.formOptions.forEach(function (el) {
+	          formOptions.push(_react2.default.createElement(
+	            'option',
+	            { key: el.id, value: el.id },
+	            el.name
+	          ));
+	        });
+	        console.log(formOptions);
+	        control = _react2.default.createElement(
+	          _reactBootstrap.FormControl,
+	          { componentClass: 'select', placeholder: this.props.name },
+	          formOptions
+	        );
+	        break;
+	      default:
+	        control = _react2.default.createElement(_reactBootstrap.FormControl, { type: 'text', placeholder: this.props.name, value: this.props.value });
+	        break;
+	    }
+
+	    console.log(this.props);
+	    return _react2.default.createElement(
+	      _reactBootstrap.FormGroup,
+	      { controlId: this.props.id },
+	      _react2.default.createElement(
+	        _reactBootstrap.Col,
+	        { componentClass: _reactBootstrap.ControlLabel, sm: 2 },
+	        this.props.name
+	      ),
+	      _react2.default.createElement(
+	        _reactBootstrap.Col,
+	        { sm: 10 },
+	        control
+	      )
+	    );
+	  }
+	});
+
 	var MyAddForm = _react2.default.createClass({
 	  displayName: 'MyAddForm',
 	  getInitialState: function getInitialState() {
@@ -48470,7 +48526,6 @@
 	    });
 	  },
 	  render: function render() {
-	    console.log('0');
 	    var controls = [];
 	    var schema = this.props.schema;
 	    var handleChange = this.handleChange;
@@ -48479,20 +48534,7 @@
 	    schema.forEach(function (el) {
 	      if (!el.readonly) {
 	        var editValue = editData[el.id];
-	        controls.push(_react2.default.createElement(
-	          _reactBootstrap.FormGroup,
-	          { key: el.id, controlId: el.id },
-	          _react2.default.createElement(
-	            _reactBootstrap.Col,
-	            { componentClass: _reactBootstrap.ControlLabel, sm: 2 },
-	            el.name
-	          ),
-	          _react2.default.createElement(
-	            _reactBootstrap.Col,
-	            { sm: 10 },
-	            _react2.default.createElement(_reactBootstrap.FormControl, { placeholder: el.name, value: editValue })
-	          )
-	        ));
+	        controls.push(_react2.default.createElement(MyAddFormRow, { key: el.id, id: el.id, name: el.name, type: el.type, value: editValue }));
 	      }
 	    });
 
@@ -48613,7 +48655,6 @@
 	    });
 	  },
 	  handleEdit: function handleEdit(d) {
-	    console.log(d);
 	    this.setState({ editData: d });
 	  },
 
@@ -48732,7 +48773,7 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var SCHEMA = {
-	  fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Имя" }, { id: "phone", name: "Телефон" }, { id: "balance", name: "Баланс" }, { id: "note", name: "Примечание" }],
+	  fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Имя" }, { id: "phone", name: "Телефон" }, { id: "balance", name: "Баланс" }, { id: "note", name: "Примечание", type: "textarea" }],
 	  strings: {
 	    page_header: "Тренеры",
 	    add_label: "Добавить тренера",
@@ -48777,11 +48818,11 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var SCHEMA = {
-	  fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Название" }, { id: "note", name: "Примечание" }],
+	  fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Название" }, { id: "note", name: "Примечание", type: "textarea" }],
 	  strings: {
-	    page_header: "Типы тренировок",
-	    add_label: "Добавить тип тренировок",
-	    edit_label: "Редактировать тип тренировок",
+	    page_header: "Направления тренировок",
+	    add_label: "Добавить направление тренировок",
+	    edit_label: "Редактировать направление тренировок",
 	    add_label_short: "Добавить",
 	    update_label_short: "Обновить",
 	    delete_label_short: "Удалить"
@@ -48822,7 +48863,7 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var SCHEMA = {
-	  fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Название" }, { id: "note", name: "Примечание" }],
+	  fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Название" }, { id: "note", name: "Примечание", type: "textarea" }],
 	  strings: {
 	    page_header: "Залы",
 	    add_label: "Добавить зал",
@@ -48866,16 +48907,8 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	//            'id',
-	//            'name',
-	//            'visits',
-	//            'validDays',
-	//            'price',
-	//            'note',
-	//            'url'
-
 	var SCHEMA = {
-	  fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Название" }, { id: "visits", name: "Занятий" }, { id: "validDays", name: "Срок действия" }, { id: "price", name: "Стоимость" }, { id: "note", name: "Примечание" }],
+	  fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Название" }, { id: "visits", name: "Занятий" }, { id: "validDays", name: "Срок действия" }, { id: "price", name: "Стоимость" }, { id: "note", name: "Примечание", type: "textarea" }],
 	  strings: {
 	    page_header: "Абонементы",
 	    add_label: "Добавить абонемент",

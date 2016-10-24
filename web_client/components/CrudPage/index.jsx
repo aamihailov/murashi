@@ -59,6 +59,50 @@ var MyTable = React.createClass({
   }
 });
 
+var MyAddFormRow = React.createClass({
+  getInitialState() {
+    return {formOptions: []};
+  },
+
+  render(){
+    var control;
+    var formOptions;
+    switch(this.props.type) {
+      case 'textarea':
+        control = <FormControl componentClass='textarea' placeholder={this.props.name} value={this.props.value}/>;
+        break;
+      case 'select':
+        var formOptions = [];
+        formOptions.push(<option key={0} value={0}>{'...'}</option>);
+        this.state.formOptions.forEach(function(el) {
+          formOptions.push(
+            <option key={el.id} value={el.id}>{el.name}</option>
+          );
+        });
+        console.log(formOptions);
+        control = (
+          <FormControl componentClass='select' placeholder={this.props.name}>
+            {formOptions}
+          </FormControl>
+        );
+        break;
+      default:
+        control = <FormControl type='text' placeholder={this.props.name} value={this.props.value}/>;
+        break;
+    }
+
+    console.log(this.props);
+    return(
+      <FormGroup controlId={this.props.id}>
+        <Col componentClass={ControlLabel} sm={2}>{this.props.name}</Col>
+        <Col sm={10}>
+          {control}
+        </Col>
+      </FormGroup>
+    );
+  }
+});
+
 var MyAddForm = React.createClass({
   getInitialState() {
     return {formData: {}};
@@ -118,7 +162,6 @@ var MyAddForm = React.createClass({
   },
 
   render(){
-    console.log('0');
     var controls = [];
     var schema = this.props.schema;
     var handleChange = this.handleChange;
@@ -128,10 +171,7 @@ var MyAddForm = React.createClass({
       if (!el.readonly) {
         var editValue = editData[el.id];
         controls.push(
-          <FormGroup key={el.id} controlId={el.id}>
-            <Col componentClass={ControlLabel} sm={2}>{el.name}</Col>
-            <Col sm={10}><FormControl placeholder={el.name} value={editValue}/></Col>
-          </FormGroup>
+          <MyAddFormRow key={el.id} id={el.id} name={el.name} type={el.type} value={editValue}/>
         );
       }
     });
@@ -238,7 +278,6 @@ const MyCRUDPage = React.createClass({
   },
 
   handleEdit(d) {
-    console.log(d);
     this.setState({editData: d});
   },
 

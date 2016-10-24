@@ -5,7 +5,7 @@ var SCHEMA = {
   fields: [
     {id: "id", name: "#", readonly: true},
     {id: "name", name: "Название"},
-    {id: "note", name: "Примечание"}
+    {id: "note", name: "Примечание", type: "textarea"}
   ],
   strings: {
     page_header: "Залы",

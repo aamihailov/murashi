@@ -5,12 +5,12 @@ var SCHEMA = {
   fields: [
     {id: "id", name: "#", readonly: true},
     {id: "name", name: "Название"},
-    {id: "note", name: "Примечание"}
+    {id: "note", name: "Примечание", type: "textarea"}
   ],
   strings: {
-    page_header: "Типы тренировок",
-    add_label: "Добавить тип тренировок",
-    edit_label: "Редактировать тип тренировок",
+    page_header: "Направления тренировок",
+    add_label: "Добавить направление тренировок",
+    edit_label: "Редактировать направление тренировок",
     add_label_short: "Добавить",
     update_label_short: "Обновить",
     delete_label_short: "Удалить"

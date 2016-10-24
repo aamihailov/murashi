@@ -1,14 +1,6 @@
 import React from 'react'
 import CrudPage from '../CrudPage'
 
-//            'id',
-//            'name',
-//            'visits',
-//            'validDays',
-//            'price',
-//            'note',
-//            'url'
-
 var SCHEMA = {
   fields: [
     {id: "id", name: "#", readonly: true},
@@ -16,7 +8,7 @@ var SCHEMA = {
     {id: "visits", name: "Занятий"},
     {id: "validDays", name: "Срок действия"},
     {id: "price", name: "Стоимость"},
-    {id: "note", name: "Примечание"}
+    {id: "note", name: "Примечание", type: "textarea"}
   ],
   strings: {
     page_header: "Абонементы",
