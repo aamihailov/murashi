@@ -1,7 +1,7 @@
 import React from 'react'
 import { PageHeader, Table } from 'react-bootstrap'
 import { Form, FormGroup, Col, FormControl, Button, ButtonToolbar, ControlLabel } from 'react-bootstrap'
-import { Modal } from 'react-bootstrap'
+import { Modal, Popover } from 'react-bootstrap'
 var Format = require('string-format')
 
 var MyTableHeader = React.createClass({
@@ -67,6 +67,15 @@ var MyAddFormRow = React.createClass({
   render(){
     var control;
     var formOptions;
+
+    var validationState;
+    var errorList;
+    if (this.props.wrong) {
+      console.log(this.props.wrong);
+      validationState = "error";
+      errorList = <div>{this.props.wrong}</div>;
+    }
+
     switch(this.props.type) {
       case 'textarea':
         control = <FormControl componentClass='textarea' placeholder={this.props.name} value={this.props.value}/>;
@@ -91,10 +100,14 @@ var MyAddFormRow = React.createClass({
     }
 
     return(
-      <FormGroup controlId={this.props.id}>
+      <FormGroup validationState={validationState} controlId={this.props.id}>
         <Col componentClass={ControlLabel} sm={2}>{this.props.name}</Col>
         <Col sm={10}>
           {control}
+          <FormControl.Feedback />
+        </Col>
+        <Col smOffset={2} sm={10}>
+          {errorList}
         </Col>
       </FormGroup>
     );
@@ -103,27 +116,7 @@ var MyAddFormRow = React.createClass({
 
 var MyAddForm = React.createClass({
   getInitialState() {
-    return {formData: {}, formValid: true};
-  },
-
-  checkValidness(data) {
-    var formValid = true;
-    this.props.schema.forEach(
-      function(el) {
-        var v = data[el.id];
-        if (el.mandatory && (!v || v == '')) {
-          formValid = false;
-        }
-        if (el.validator && !el.validator(v)) {
-          formValid = false;
-        }
-      }
-    );
-    this.setState({formValid: formValid});
-  },
-
-  componentDidMount: function() {
-    this.checkValidness(this.props.editData ? this.props.editData : this.state.formData);
+    return {formData: {}, wrongFields: {}};
   },
 
   handleChange(e) {
@@ -131,16 +124,15 @@ var MyAddForm = React.createClass({
       var editData = this.props.editData;
       editData[e.target.id] = e.target.value;
       this.props.handleEdit(editData);
-      this.checkValidness(editData);
     } else {
       var formData = this.state.formData;
       formData[e.target.id] = e.target.value;
       this.setState([formData: formData]);
-      this.checkValidness(formData);
     }
   },
 
   handleCreate(e) {
+    this.setState({wrongFields: {}});
     fetch(this.props.urls.api_root, {
       method: 'POST',
       headers: {
@@ -148,16 +140,22 @@ var MyAddForm = React.createClass({
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(this.state.formData)})
-    .then((response) => response.json())
-    .then((responseJson) => {
-        this.props.handleClose();
-      })
+    .then((response) => {
+      if (response.ok) {
+        this.props.handleClose()
+      } else {
+        response.json().then((data) => {
+          this.setState({wrongFields: data});
+        })
+      }
+    })
     .catch((error) => {
       console.error(error);
     });
   },
 
   handleUpdate(id) {
+    this.setState({wrongFields: {}});
     fetch(Format(this.props.urls.api_element, this.props.editData.id), {
       method: 'PUT',
       headers: {
@@ -166,8 +164,15 @@ var MyAddForm = React.createClass({
       },
       body: JSON.stringify(this.props.editData)
     })
-    .then((response) => response.json())
-    .then((response) => {this.props.handleClose()})
+    .then((response) => {
+      if (response.ok) {
+        this.props.handleClose()
+      } else {
+        response.json().then((data) => {
+          this.setState({wrongFields: data});
+        })
+      }
+    })
     .catch((error) => {
       console.error(error);
     });
@@ -187,11 +192,18 @@ var MyAddForm = React.createClass({
     var handleChange = this.handleChange;
 
     var editData = this.props.editData ? this.props.editData : {};
+    var wrong = this.state.wrongFields;
     schema.forEach(function(el) {
       if (!el.readonly) {
         var editValue = editData[el.id];
         controls.push(
-          <MyAddFormRow key={el.id} id={el.id} name={el.name} type={el.type} value={editValue}/>
+          <MyAddFormRow key={el.id}
+            id={el.id}
+            wrong={wrong[el.id]}
+            name={el.name}
+            type={el.type}
+            value={editValue}
+          />
         );
       }
     });
@@ -199,13 +211,13 @@ var MyAddForm = React.createClass({
     var buttons = [];
     if (this.props.editData == null) {
       buttons.push(
-        <Button key="create" bsStyle="primary" disabled={!this.state.formValid} onClick={this.handleCreate}>
+        <Button key="create" bsStyle="primary" onClick={this.handleCreate}>
           {this.props.strings.add_label_short}
         </Button>
       );
     } else {
       buttons.push(
-        <Button key="update" bsStyle="primary" disabled={!this.state.formValid} onClick={this.handleUpdate}>
+        <Button key="update" bsStyle="primary" onClick={this.handleUpdate}>
           {this.props.strings.update_label_short}
         </Button>
       );

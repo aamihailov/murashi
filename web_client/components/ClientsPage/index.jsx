@@ -4,7 +4,7 @@ import CrudPage from '../CrudPage'
 var SCHEMA = {
   fields: [
     {id: "id", name: "#", readonly: true},
-    {id: "name", name: "Имя", mandatory: true},
+    {id: "name", name: "Имя"},
     {id: "phone", name: "Телефон"},
     {id: "balance", name: "Баланс"},
     {id: "note", name: "Примечание", type: "textarea"}

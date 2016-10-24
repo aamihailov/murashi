@@ -6,7 +6,7 @@ var SCHEMA = {
     {id: "id", name: "#", readonly: true},
     {id: "name", name: "Имя", mandatory: true},
     {id: "phone", name: "Телефон"},
-    {id: "balance", name: "Баланс"},
+    {id: "balance", name: "Баланс", validator: function(v) { return !isNaN(v)}},
     {id: "note", name: "Примечание", type: "textarea"}
   ],
   strings: {

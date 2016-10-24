@@ -48118,7 +48118,7 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var SCHEMA = {
-	  fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Имя", mandatory: true }, { id: "phone", name: "Телефон" }, { id: "balance", name: "Баланс" }, { id: "note", name: "Примечание", type: "textarea" }],
+	  fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Имя" }, { id: "phone", name: "Телефон" }, { id: "balance", name: "Баланс" }, { id: "note", name: "Примечание", type: "textarea" }],
 	  strings: {
 	    page_header: "Клиенты",
 	    add_label: "Добавить клиента",
@@ -48417,6 +48417,19 @@
 	  render: function render() {
 	    var control;
 	    var formOptions;
+
+	    var validationState;
+	    var errorList;
+	    if (this.props.wrong) {
+	      console.log(this.props.wrong);
+	      validationState = "error";
+	      errorList = _react2.default.createElement(
+	        'div',
+	        null,
+	        this.props.wrong
+	      );
+	    }
+
 	    switch (this.props.type) {
 	      case 'textarea':
 	        control = _react2.default.createElement(_reactBootstrap.FormControl, { componentClass: 'textarea', placeholder: this.props.name, value: this.props.value });
@@ -48448,7 +48461,7 @@
 
 	    return _react2.default.createElement(
 	      _reactBootstrap.FormGroup,
-	      { controlId: this.props.id },
+	      { validationState: validationState, controlId: this.props.id },
 	      _react2.default.createElement(
 	        _reactBootstrap.Col,
 	        { componentClass: _reactBootstrap.ControlLabel, sm: 2 },
@@ -48457,7 +48470,13 @@
 	      _react2.default.createElement(
 	        _reactBootstrap.Col,
 	        { sm: 10 },
-	        control
+	        control,
+	        _react2.default.createElement(_reactBootstrap.FormControl.Feedback, null)
+	      ),
+	      _react2.default.createElement(
+	        _reactBootstrap.Col,
+	        { smOffset: 2, sm: 10 },
+	        errorList
 	      )
 	    );
 	  }
@@ -48466,43 +48485,23 @@
 	var MyAddForm = _react2.default.createClass({
 	  displayName: 'MyAddForm',
 	  getInitialState: function getInitialState() {
-	    return { formData: {}, formValid: true };
+	    return { formData: {}, wrongFields: {} };
 	  },
-	  checkValidness: function checkValidness(data) {
-	    var formValid = true;
-	    this.props.schema.forEach(function (el) {
-	      var v = data[el.id];
-	      if (el.mandatory && (!v || v == '')) {
-	        formValid = false;
-	      }
-	      if (el.validator && !el.validator(v)) {
-	        formValid = false;
-	      }
-	    });
-	    this.setState({ formValid: formValid });
-	  },
-
-
-	  componentDidMount: function componentDidMount() {
-	    this.checkValidness(this.props.editData ? this.props.editData : this.state.formData);
-	  },
-
 	  handleChange: function handleChange(e) {
 	    if (this.props.editData) {
 	      var editData = this.props.editData;
 	      editData[e.target.id] = e.target.value;
 	      this.props.handleEdit(editData);
-	      this.checkValidness(editData);
 	    } else {
 	      var formData = this.state.formData;
 	      formData[e.target.id] = e.target.value;
 	      this.setState([formData]);
-	      this.checkValidness(formData);
 	    }
 	  },
 	  handleCreate: function handleCreate(e) {
 	    var _this = this;
 
+	    this.setState({ wrongFields: {} });
 	    fetch(this.props.urls.api_root, {
 	      method: 'POST',
 	      headers: {
@@ -48510,9 +48509,13 @@
 	        'Content-Type': 'application/json'
 	      },
 	      body: (0, _stringify2.default)(this.state.formData) }).then(function (response) {
-	      return response.json();
-	    }).then(function (responseJson) {
-	      _this.props.handleClose();
+	      if (response.ok) {
+	        _this.props.handleClose();
+	      } else {
+	        response.json().then(function (data) {
+	          _this.setState({ wrongFields: data });
+	        });
+	      }
 	    }).catch(function (error) {
 	      console.error(error);
 	    });
@@ -48520,6 +48523,7 @@
 	  handleUpdate: function handleUpdate(id) {
 	    var _this2 = this;
 
+	    this.setState({ wrongFields: {} });
 	    fetch(Format(this.props.urls.api_element, this.props.editData.id), {
 	      method: 'PUT',
 	      headers: {
@@ -48528,9 +48532,13 @@
 	      },
 	      body: (0, _stringify2.default)(this.props.editData)
 	    }).then(function (response) {
-	      return response.json();
-	    }).then(function (response) {
-	      _this2.props.handleClose();
+	      if (response.ok) {
+	        _this2.props.handleClose();
+	      } else {
+	        response.json().then(function (data) {
+	          _this2.setState({ wrongFields: data });
+	        });
+	      }
 	    }).catch(function (error) {
 	      console.error(error);
 	    });
@@ -48550,10 +48558,17 @@
 	    var handleChange = this.handleChange;
 
 	    var editData = this.props.editData ? this.props.editData : {};
+	    var wrong = this.state.wrongFields;
 	    schema.forEach(function (el) {
 	      if (!el.readonly) {
 	        var editValue = editData[el.id];
-	        controls.push(_react2.default.createElement(MyAddFormRow, { key: el.id, id: el.id, name: el.name, type: el.type, value: editValue }));
+	        controls.push(_react2.default.createElement(MyAddFormRow, { key: el.id,
+	          id: el.id,
+	          wrong: wrong[el.id],
+	          name: el.name,
+	          type: el.type,
+	          value: editValue
+	        }));
 	      }
 	    });
 
@@ -48561,13 +48576,13 @@
 	    if (this.props.editData == null) {
 	      buttons.push(_react2.default.createElement(
 	        _reactBootstrap.Button,
-	        { key: 'create', bsStyle: 'primary', disabled: !this.state.formValid, onClick: this.handleCreate },
+	        { key: 'create', bsStyle: 'primary', onClick: this.handleCreate },
 	        this.props.strings.add_label_short
 	      ));
 	    } else {
 	      buttons.push(_react2.default.createElement(
 	        _reactBootstrap.Button,
-	        { key: 'update', bsStyle: 'primary', disabled: !this.state.formValid, onClick: this.handleUpdate },
+	        { key: 'update', bsStyle: 'primary', onClick: this.handleUpdate },
 	        this.props.strings.update_label_short
 	      ));
 	      buttons.push(_react2.default.createElement(
@@ -48792,7 +48807,9 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var SCHEMA = {
-	  fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Имя", mandatory: true }, { id: "phone", name: "Телефон" }, { id: "balance", name: "Баланс" }, { id: "note", name: "Примечание", type: "textarea" }],
+	  fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Имя", mandatory: true }, { id: "phone", name: "Телефон" }, { id: "balance", name: "Баланс", validator: function validator(v) {
+	      return !isNaN(v);
+	    } }, { id: "note", name: "Примечание", type: "textarea" }],
 	  strings: {
 	    page_header: "Тренеры",
 	    add_label: "Добавить тренера",
@@ -48837,7 +48854,7 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var SCHEMA = {
-	  fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Название", mandatory: true }, { id: "note", name: "Примечание", type: "textarea" }],
+	  fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Название" }, { id: "note", name: "Примечание", type: "textarea" }],
 	  strings: {
 	    page_header: "Направления тренировок",
 	    add_label: "Добавить направление тренировок",
@@ -48882,7 +48899,7 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var SCHEMA = {
-	  fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Название", mandatory: true }, { id: "note", name: "Примечание", type: "textarea" }],
+	  fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Название" }, { id: "note", name: "Примечание", type: "textarea" }],
 	  strings: {
 	    page_header: "Залы",
 	    add_label: "Добавить зал",
@@ -48927,7 +48944,7 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var SCHEMA = {
-	  fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Название", mandatory: true }, { id: "visits", name: "Занятий" }, { id: "validDays", name: "Срок действия" }, { id: "price", name: "Стоимость" }, { id: "note", name: "Примечание", type: "textarea" }],
+	  fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Название" }, { id: "visits", name: "Занятий" }, { id: "validDays", name: "Срок действия" }, { id: "price", name: "Стоимость" }, { id: "note", name: "Примечание", type: "textarea" }],
 	  strings: {
 	    page_header: "Абонементы",
 	    add_label: "Добавить абонемент",
