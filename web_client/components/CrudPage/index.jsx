@@ -79,7 +79,6 @@ var MyAddFormRow = React.createClass({
             <option key={el.id} value={el.id}>{el.name}</option>
           );
         });
-        console.log(formOptions);
         control = (
           <FormControl componentClass='select' placeholder={this.props.name}>
             {formOptions}
@@ -91,7 +90,6 @@ var MyAddFormRow = React.createClass({
         break;
     }
 
-    console.log(this.props);
     return(
       <FormGroup controlId={this.props.id}>
         <Col componentClass={ControlLabel} sm={2}>{this.props.name}</Col>
@@ -105,7 +103,27 @@ var MyAddFormRow = React.createClass({
 
 var MyAddForm = React.createClass({
   getInitialState() {
-    return {formData: {}};
+    return {formData: {}, formValid: true};
+  },
+
+  checkValidness(data) {
+    var formValid = true;
+    this.props.schema.forEach(
+      function(el) {
+        var v = data[el.id];
+        if (el.mandatory && (!v || v == '')) {
+          formValid = false;
+        }
+        if (el.validator && !el.validator(v)) {
+          formValid = false;
+        }
+      }
+    );
+    this.setState({formValid: formValid});
+  },
+
+  componentDidMount: function() {
+    this.checkValidness(this.props.editData ? this.props.editData : this.state.formData);
   },
 
   handleChange(e) {
@@ -113,10 +131,12 @@ var MyAddForm = React.createClass({
       var editData = this.props.editData;
       editData[e.target.id] = e.target.value;
       this.props.handleEdit(editData);
+      this.checkValidness(editData);
     } else {
       var formData = this.state.formData;
       formData[e.target.id] = e.target.value;
       this.setState([formData: formData]);
+      this.checkValidness(formData);
     }
   },
 
@@ -179,13 +199,13 @@ var MyAddForm = React.createClass({
     var buttons = [];
     if (this.props.editData == null) {
       buttons.push(
-        <Button key="create" bsStyle="primary" onClick={this.handleCreate}>
+        <Button key="create" bsStyle="primary" disabled={!this.state.formValid} onClick={this.handleCreate}>
           {this.props.strings.add_label_short}
         </Button>
       );
     } else {
       buttons.push(
-        <Button key="update" bsStyle="primary" onClick={this.handleUpdate}>
+        <Button key="update" bsStyle="primary" disabled={!this.state.formValid} onClick={this.handleUpdate}>
           {this.props.strings.update_label_short}
         </Button>
       );

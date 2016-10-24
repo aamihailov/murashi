@@ -48118,7 +48118,7 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var SCHEMA = {
-	  fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Имя" }, { id: "phone", name: "Телефон" }, { id: "balance", name: "Баланс" }, { id: "note", name: "Примечание", type: "textarea" }],
+	  fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Имя", mandatory: true }, { id: "phone", name: "Телефон" }, { id: "balance", name: "Баланс" }, { id: "note", name: "Примечание", type: "textarea" }],
 	  strings: {
 	    page_header: "Клиенты",
 	    add_label: "Добавить клиента",
@@ -48435,7 +48435,6 @@
 	            el.name
 	          ));
 	        });
-	        console.log(formOptions);
 	        control = _react2.default.createElement(
 	          _reactBootstrap.FormControl,
 	          { componentClass: 'select', placeholder: this.props.name },
@@ -48447,7 +48446,6 @@
 	        break;
 	    }
 
-	    console.log(this.props);
 	    return _react2.default.createElement(
 	      _reactBootstrap.FormGroup,
 	      { controlId: this.props.id },
@@ -48468,17 +48466,38 @@
 	var MyAddForm = _react2.default.createClass({
 	  displayName: 'MyAddForm',
 	  getInitialState: function getInitialState() {
-	    return { formData: {} };
+	    return { formData: {}, formValid: true };
 	  },
+	  checkValidness: function checkValidness(data) {
+	    var formValid = true;
+	    this.props.schema.forEach(function (el) {
+	      var v = data[el.id];
+	      if (el.mandatory && (!v || v == '')) {
+	        formValid = false;
+	      }
+	      if (el.validator && !el.validator(v)) {
+	        formValid = false;
+	      }
+	    });
+	    this.setState({ formValid: formValid });
+	  },
+
+
+	  componentDidMount: function componentDidMount() {
+	    this.checkValidness(this.props.editData ? this.props.editData : this.state.formData);
+	  },
+
 	  handleChange: function handleChange(e) {
 	    if (this.props.editData) {
 	      var editData = this.props.editData;
 	      editData[e.target.id] = e.target.value;
 	      this.props.handleEdit(editData);
+	      this.checkValidness(editData);
 	    } else {
 	      var formData = this.state.formData;
 	      formData[e.target.id] = e.target.value;
 	      this.setState([formData]);
+	      this.checkValidness(formData);
 	    }
 	  },
 	  handleCreate: function handleCreate(e) {
@@ -48542,13 +48561,13 @@
 	    if (this.props.editData == null) {
 	      buttons.push(_react2.default.createElement(
 	        _reactBootstrap.Button,
-	        { key: 'create', bsStyle: 'primary', onClick: this.handleCreate },
+	        { key: 'create', bsStyle: 'primary', disabled: !this.state.formValid, onClick: this.handleCreate },
 	        this.props.strings.add_label_short
 	      ));
 	    } else {
 	      buttons.push(_react2.default.createElement(
 	        _reactBootstrap.Button,
-	        { key: 'update', bsStyle: 'primary', onClick: this.handleUpdate },
+	        { key: 'update', bsStyle: 'primary', disabled: !this.state.formValid, onClick: this.handleUpdate },
 	        this.props.strings.update_label_short
 	      ));
 	      buttons.push(_react2.default.createElement(
@@ -48773,7 +48792,7 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var SCHEMA = {
-	  fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Имя" }, { id: "phone", name: "Телефон" }, { id: "balance", name: "Баланс" }, { id: "note", name: "Примечание", type: "textarea" }],
+	  fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Имя", mandatory: true }, { id: "phone", name: "Телефон" }, { id: "balance", name: "Баланс" }, { id: "note", name: "Примечание", type: "textarea" }],
 	  strings: {
 	    page_header: "Тренеры",
 	    add_label: "Добавить тренера",
@@ -48818,7 +48837,7 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var SCHEMA = {
-	  fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Название" }, { id: "note", name: "Примечание", type: "textarea" }],
+	  fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Название", mandatory: true }, { id: "note", name: "Примечание", type: "textarea" }],
 	  strings: {
 	    page_header: "Направления тренировок",
 	    add_label: "Добавить направление тренировок",
@@ -48863,7 +48882,7 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var SCHEMA = {
-	  fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Название" }, { id: "note", name: "Примечание", type: "textarea" }],
+	  fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Название", mandatory: true }, { id: "note", name: "Примечание", type: "textarea" }],
 	  strings: {
 	    page_header: "Залы",
 	    add_label: "Добавить зал",
@@ -48908,7 +48927,7 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var SCHEMA = {
-	  fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Название" }, { id: "visits", name: "Занятий" }, { id: "validDays", name: "Срок действия" }, { id: "price", name: "Стоимость" }, { id: "note", name: "Примечание", type: "textarea" }],
+	  fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Название", mandatory: true }, { id: "visits", name: "Занятий" }, { id: "validDays", name: "Срок действия" }, { id: "price", name: "Стоимость" }, { id: "note", name: "Примечание", type: "textarea" }],
 	  strings: {
 	    page_header: "Абонементы",
 	    add_label: "Добавить абонемент",
