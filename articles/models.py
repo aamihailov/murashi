@@ -4,11 +4,12 @@ from django.contrib.auth.models import User
 
 
 class Client(models.Model):
+    owner = models.ForeignKey(User, related_name='own_clients')
     user = models.ForeignKey(User, null=True)
-    name = models.CharField(_('name'), max_length=128)
-    phone = models.CharField(_('phone'), max_length=32, blank=True)
+    name = models.CharField(max_length=128)
+    phone = models.CharField(max_length=32, blank=True)
     balance = models.DecimalField(max_digits=8, decimal_places=2, default=0)
-    note = models.TextField(_('note'), max_length=4096, blank=True)
+    note = models.TextField(max_length=4096, blank=True)
 
     def __unicode__(self):
         return self.name
@@ -20,11 +21,12 @@ class Client(models.Model):
 
 
 class Trainer(models.Model):
+    owner = models.ForeignKey(User, related_name='own_trainers')
     user = models.ForeignKey(User, null=True)
-    name = models.CharField(_('name'), max_length=128)
-    phone = models.CharField(_('phone'), max_length=32, blank=True)
+    name = models.CharField(max_length=128)
+    phone = models.CharField(max_length=32, blank=True)
     balance = models.DecimalField(max_digits=8, decimal_places=2, default=0)
-    note = models.TextField(_('note'), max_length=4096, blank=True)
+    note = models.TextField(max_length=4096, blank=True)
 
     def __unicode__(self):
         return self.name
@@ -36,8 +38,9 @@ class Trainer(models.Model):
 
 
 class TrainType(models.Model):
-    name = models.CharField(_('name'), max_length=128)
-    note = models.TextField(_('note'), max_length=4096, blank=True)
+    owner = models.ForeignKey(User, related_name='own_train_types')
+    name = models.CharField(max_length=128)
+    note = models.TextField(max_length=4096, blank=True)
 
     def __unicode__(self):
         return self.name
@@ -49,8 +52,9 @@ class TrainType(models.Model):
 
 
 class Location(models.Model):
-    name = models.CharField(_('name'), max_length=128)
-    note = models.TextField(_('note'), max_length=4096, blank=True)
+    owner = models.ForeignKey(User, related_name='own_locations')
+    name = models.CharField(max_length=128)
+    note = models.TextField(max_length=4096, blank=True)
 
     def __unicode__(self):
         return self.name
@@ -62,11 +66,12 @@ class Location(models.Model):
 
 
 class Subscription(models.Model):
-    name = models.CharField(_('name'), max_length=128)
-    visits = models.IntegerField(_('visits'), default=0)
-    validDays = models.IntegerField(_('valid'), default=0)
+    owner = models.ForeignKey(User, related_name='own_subscriptions')
+    name = models.CharField(max_length=128)
+    visits = models.IntegerField(default=0)
+    validDays = models.IntegerField(default=0)
     price = models.DecimalField(max_digits=8, decimal_places=2, default=0)
-    note = models.TextField(_('note'), max_length=4096, blank=True)
+    note = models.TextField(max_length=4096, blank=True)
 
     def __unicode__(self):
         return self.name
@@ -75,3 +80,20 @@ class Subscription(models.Model):
         ordering = ['id']
         verbose_name = _('subscription')
         verbose_name_plural = _('subscriptions')
+
+
+class Group(models.Model):
+    owner = models.ForeignKey(User, related_name='own_groups')
+    name = models.CharField(max_length=128)
+    trainType = models.ForeignKey(TrainType, null=True)
+    trainer = models.ForeignKey(Trainer, null=True)
+    duration = models.IntegerField(default=60)
+    note = models.TextField(max_length=4096, blank=True)
+
+    def __unicode__(self):
+        return self.name
+
+    class Meta:
+        ordering = ['id']
+        verbose_name = _('group')
+        verbose_name_plural = _('groups')

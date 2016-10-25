@@ -1,38 +1,73 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, permissions
 from .serializers import *
 
 
-class ClientViewSet(viewsets.ModelViewSet):
-    queryset = Client.objects.all()
+class IsOwner(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        return obj.owner == request.user
 
-    def get_serializer_class(self):
-        return ClientSerializer
+
+class ClientViewSet(viewsets.ModelViewSet):
+    serializer_class = ClientSerializer
+    permission_classes = (permissions.IsAuthenticated, IsOwner)
+
+    def get_queryset(self):
+        return self.request.user.own_clients.all()
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
 
 
 class TrainerViewSet(viewsets.ModelViewSet):
-    queryset = Trainer.objects.all()
+    serializer_class = TrainerSerializer
+    permission_classes = (permissions.IsAuthenticated, IsOwner)
 
-    def get_serializer_class(self):
-        return TrainerSerializer
+    def get_queryset(self):
+        return self.request.user.own_trainers.all()
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
 
 
 class TrainTypeViewSet(viewsets.ModelViewSet):
-    queryset = TrainType.objects.all()
+    serializer_class = TrainTypeSerializer
+    permission_classes = (permissions.IsAuthenticated, IsOwner)
 
-    def get_serializer_class(self):
-        return TrainTypeSerializer
+    def get_queryset(self):
+        return self.request.user.own_train_types.all()
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
 
 
 class LocationViewSet(viewsets.ModelViewSet):
-    queryset = Location.objects.all()
+    serializer_class = LocationSerializer
+    permission_classes = (permissions.IsAuthenticated, IsOwner)
 
-    def get_serializer_class(self):
-        return LocationSerializer
+    def get_queryset(self):
+        return self.request.user.own_locations.all()
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
 
 
 class SubscriptionViewSet(viewsets.ModelViewSet):
-    queryset = Subscription.objects.all()
+    serializer_class = SubscriptionSerializer
+    permission_classes = (permissions.IsAuthenticated, IsOwner)
 
-    def get_serializer_class(self):
-        return SubscriptionSerializer
+    def get_queryset(self):
+        return self.request.user.own_subscriptions.all()
 
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
+
+class GroupsViewSet(viewsets.ModelViewSet):
+    serializer_class = GroupSerializer
+    permission_classes = (permissions.IsAuthenticated, IsOwner)
+
+    def get_queryset(self):
+        return self.request.user.own_groups.all()
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)

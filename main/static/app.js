@@ -21550,6 +21550,10 @@
 
 	var _SubscriptionsPage2 = _interopRequireDefault(_SubscriptionsPage);
 
+	var _GroupsPage = __webpack_require__(595);
+
+	var _GroupsPage2 = _interopRequireDefault(_GroupsPage);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var App = function (_Component) {
@@ -21573,7 +21577,7 @@
 	          _react2.default.createElement(_reactRouter.Route, { path: 'schedule', component: _EmptyPage2.default }),
 	          _react2.default.createElement(_reactRouter.Route, { path: 'client', component: _ClientsPage2.default }),
 	          _react2.default.createElement(_reactRouter.Route, { path: 'trainer', component: _TrainersPage2.default }),
-	          _react2.default.createElement(_reactRouter.Route, { path: 'group', component: _EmptyPage2.default }),
+	          _react2.default.createElement(_reactRouter.Route, { path: 'group', component: _GroupsPage2.default }),
 	          _react2.default.createElement(_reactRouter.Route, { path: 'train-type', component: _TrainTypesPage2.default }),
 	          _react2.default.createElement(_reactRouter.Route, { path: 'subscription', component: _SubscriptionsPage2.default }),
 	          _react2.default.createElement(_reactRouter.Route, { path: 'location', component: _LocationsPage2.default }),
@@ -48328,6 +48332,10 @@
 
 	var _reactBootstrap = __webpack_require__(325);
 
+	var _reactCookie = __webpack_require__(596);
+
+	var _reactCookie2 = _interopRequireDefault(_reactCookie);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var Format = __webpack_require__(587);
@@ -48504,9 +48512,11 @@
 	    this.setState({ wrongFields: {} });
 	    fetch(this.props.urls.api_root, {
 	      method: 'POST',
+	      credentials: 'include',
 	      headers: {
 	        'Accept': 'application/json',
-	        'Content-Type': 'application/json'
+	        'Content-Type': 'application/json',
+	        'X-CSRFToken': _reactCookie2.default.load('csrftoken')
 	      },
 	      body: (0, _stringify2.default)(this.state.formData) }).then(function (response) {
 	      if (response.ok) {
@@ -48526,9 +48536,11 @@
 	    this.setState({ wrongFields: {} });
 	    fetch(Format(this.props.urls.api_element, this.props.editData.id), {
 	      method: 'PUT',
+	      credentials: 'include',
 	      headers: {
 	        'Accept': 'application/json',
-	        'Content-Type': 'application/json'
+	        'Content-Type': 'application/json',
+	        'X-CSRFToken': _reactCookie2.default.load('csrftoken')
 	      },
 	      body: (0, _stringify2.default)(this.props.editData)
 	    }).then(function (response) {
@@ -48546,7 +48558,13 @@
 	  handleDelete: function handleDelete(id) {
 	    var _this3 = this;
 
-	    fetch(Format(this.props.urls.api_element, this.props.editData.id), { method: 'DELETE' }).then(function (response) {
+	    fetch(Format(this.props.urls.api_element, this.props.editData.id), {
+	      method: 'DELETE',
+	      credentials: 'include',
+	      headers: {
+	        'X-CSRFToken': _reactCookie2.default.load('csrftoken')
+	      }
+	    }).then(function (response) {
 	      _this3.props.handleClose();
 	    }).catch(function (error) {
 	      console.error(error);
@@ -48680,10 +48698,17 @@
 
 	    this.setState({ editData: null });
 
-	    fetch(this.props.urls.api_root).then(function (response) {
-	      return response.json();
-	    }).then(function (responseJson) {
-	      _this4.setState({ data: responseJson });
+	    fetch(this.props.urls.api_root, {
+	      credentials: 'include',
+	      headers: {
+	        'X-CSRFToken': _reactCookie2.default.load('csrftoken')
+	      }
+	    }).then(function (response) {
+	      if (response.ok) {
+	        response.json().then(function (data) {
+	          _this4.setState({ data: data });
+	        });
+	      }
 	    }).catch(function (error) {
 	      console.error(error);
 	    });
@@ -48807,9 +48832,7 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var SCHEMA = {
-	  fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Имя", mandatory: true }, { id: "phone", name: "Телефон" }, { id: "balance", name: "Баланс", validator: function validator(v) {
-	      return !isNaN(v);
-	    } }, { id: "note", name: "Примечание", type: "textarea" }],
+	  fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Имя" }, { id: "phone", name: "Телефон" }, { id: "balance", name: "Баланс" }, { id: "note", name: "Примечание", type: "textarea" }],
 	  strings: {
 	    page_header: "Тренеры",
 	    add_label: "Добавить тренера",
@@ -48967,6 +48990,367 @@
 	});
 
 	exports.default = Page;
+
+/***/ },
+/* 594 */,
+/* 595 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _CrudPage = __webpack_require__(588);
+
+	var _CrudPage2 = _interopRequireDefault(_CrudPage);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var SCHEMA = {
+	  fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Название" }, { id: "trainType", name: "Направление тренировок" }, { id: "trainer", name: "Тренер" }, { id: "duration", name: "Продолжительность" }, { id: "note", name: "Примечание", type: "textarea" }],
+	  strings: {
+	    page_header: "Группы",
+	    add_label: "Добавить группу",
+	    edit_label: "Редактировать группу",
+	    add_label_short: "Добавить",
+	    update_label_short: "Обновить",
+	    delete_label_short: "Удалить"
+	  },
+	  urls: {
+	    api_root: "http://localhost:5000/api/v0/groups/?format=json",
+	    api_element: "http://localhost:5000/api/v0/groups/{0}/?format=json"
+	  }
+	};
+
+	var Page = _react2.default.createClass({
+	  displayName: 'Page',
+	  render: function render() {
+	    return _react2.default.createElement(_CrudPage2.default, { strings: SCHEMA.strings, schema: SCHEMA.fields, urls: SCHEMA.urls, data: [] });
+	  }
+	});
+
+	exports.default = Page;
+
+/***/ },
+/* 596 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var cookie = __webpack_require__(597);
+
+	if (typeof Object.assign != 'function') {
+	  Object.assign = function(target) {
+	    'use strict';
+	    if (target == null) {
+	      throw new TypeError('Cannot convert undefined or null to object');
+	    }
+
+	    target = Object(target);
+	    for (var index = 1; index < arguments.length; index++) {
+	      var source = arguments[index];
+	      if (source != null) {
+	        for (var key in source) {
+	          if (Object.prototype.hasOwnProperty.call(source, key)) {
+	            target[key] = source[key];
+	          }
+	        }
+	      }
+	    }
+	    return target;
+	  };
+	}
+
+	var _rawCookie = {};
+	var _res = undefined;
+
+	function _isResWritable() {
+	  if(!_res)
+	    return false
+	  if(_res.headersSent === true)
+	    return false
+	  return true
+	}
+
+	function load(name, doNotParse) {
+	  var cookies = (typeof document === 'undefined') ? _rawCookie : cookie.parse(document.cookie);
+	  var cookieVal = cookies && cookies[name];
+
+	  if (!doNotParse) {
+	    try {
+	      cookieVal = JSON.parse(cookieVal);
+	    } catch(e) {
+	      // Not serialized object
+	    }
+	  }
+
+	  return cookieVal;
+	}
+
+	function select(regex) {
+	  var cookies = (typeof document === 'undefined') ? _rawCookie : cookie.parse(document.cookie);
+	  if(!cookies)
+	    return {}
+	  if(!regex)
+	    return cookies
+	  return Object.keys(cookies)
+	    .reduce(function(accumulator, name) {
+	      if(!regex.test(name))
+	        return accumulator
+	      var newCookie = {}
+	      newCookie[name] = cookies[name]
+	      return Object.assign({}, accumulator, newCookie)
+	    }, {})
+	}
+
+	function save(name, val, opt) {
+	  _rawCookie[name] = val;
+
+	  // allow you to work with cookies as objects.
+	  if (typeof val === 'object') {
+	    _rawCookie[name] = JSON.stringify(val);
+	  }
+
+	  // Cookies only work in the browser
+	  if (typeof document !== 'undefined') {
+	    document.cookie = cookie.serialize(name, _rawCookie[name], opt);
+	  }
+
+	  if (_isResWritable() && _res.cookie) {
+	    _res.cookie(name, val, opt);
+	  }
+	}
+
+	function remove(name, opt) {
+	  delete _rawCookie[name];
+
+	  if (typeof opt === 'undefined') {
+	    opt = {};
+	  } else if (typeof opt === 'string') {
+	    // Will be deprecated in future versions
+	    opt = { path: opt };
+	  } else {
+	    // Prevent mutation of opt below
+	    opt = Object.assign({}, opt);
+	  }
+
+	  if (typeof document !== 'undefined') {
+	    opt.expires = new Date(1970, 1, 1, 0, 0, 1);
+	    document.cookie = cookie.serialize(name, '', opt);
+	  }
+
+	  if (_isResWritable() && _res.clearCookie) {
+	    _res.clearCookie(name, opt);
+	  }
+	}
+
+	function setRawCookie(rawCookie) {
+	  if (rawCookie) {
+	    _rawCookie = cookie.parse(rawCookie);
+	  } else {
+	    _rawCookie = {};
+	  }
+	}
+
+	function plugToRequest(req, res) {
+	  if (req.cookie) {
+	    _rawCookie = req.cookie;
+	  } else if (req.cookies) {
+	    _rawCookie = req.cookies;
+	  } else if (req.headers && req.headers.cookie) {
+	    setRawCookie(req.headers.cookie);
+	  } else {
+	    _rawCookie = {};
+	  }
+
+	  _res = res;
+	  return function unplug() {
+	    _res = null;
+	    _rawCookie = {};
+	  }
+	}
+
+	var reactCookie = {
+	  load: load,
+	  select: select,
+	  save: save,
+	  remove: remove,
+	  setRawCookie: setRawCookie,
+	  plugToRequest: plugToRequest
+	};
+
+	if (typeof window !== 'undefined') {
+	  window['reactCookie'] = reactCookie;
+	}
+
+	module.exports = reactCookie;
+
+
+/***/ },
+/* 597 */
+/***/ function(module, exports) {
+
+	/*!
+	 * cookie
+	 * Copyright(c) 2012-2014 Roman Shtylman
+	 * Copyright(c) 2015 Douglas Christopher Wilson
+	 * MIT Licensed
+	 */
+
+	/**
+	 * Module exports.
+	 * @public
+	 */
+
+	exports.parse = parse;
+	exports.serialize = serialize;
+
+	/**
+	 * Module variables.
+	 * @private
+	 */
+
+	var decode = decodeURIComponent;
+	var encode = encodeURIComponent;
+
+	/**
+	 * RegExp to match field-content in RFC 7230 sec 3.2
+	 *
+	 * field-content = field-vchar [ 1*( SP / HTAB ) field-vchar ]
+	 * field-vchar   = VCHAR / obs-text
+	 * obs-text      = %x80-FF
+	 */
+
+	var fieldContentRegExp = /^[\u0009\u0020-\u007e\u0080-\u00ff]+$/;
+
+	/**
+	 * Parse a cookie header.
+	 *
+	 * Parse the given cookie header string into an object
+	 * The object has the various cookies as keys(names) => values
+	 *
+	 * @param {string} str
+	 * @param {object} [options]
+	 * @return {object}
+	 * @public
+	 */
+
+	function parse(str, options) {
+	  if (typeof str !== 'string') {
+	    throw new TypeError('argument str must be a string');
+	  }
+
+	  var obj = {}
+	  var opt = options || {};
+	  var pairs = str.split(/; */);
+	  var dec = opt.decode || decode;
+
+	  pairs.forEach(function(pair) {
+	    var eq_idx = pair.indexOf('=')
+
+	    // skip things that don't look like key=value
+	    if (eq_idx < 0) {
+	      return;
+	    }
+
+	    var key = pair.substr(0, eq_idx).trim()
+	    var val = pair.substr(++eq_idx, pair.length).trim();
+
+	    // quoted values
+	    if ('"' == val[0]) {
+	      val = val.slice(1, -1);
+	    }
+
+	    // only assign once
+	    if (undefined == obj[key]) {
+	      obj[key] = tryDecode(val, dec);
+	    }
+	  });
+
+	  return obj;
+	}
+
+	/**
+	 * Serialize data into a cookie header.
+	 *
+	 * Serialize the a name value pair into a cookie string suitable for
+	 * http headers. An optional options object specified cookie parameters.
+	 *
+	 * serialize('foo', 'bar', { httpOnly: true })
+	 *   => "foo=bar; httpOnly"
+	 *
+	 * @param {string} name
+	 * @param {string} val
+	 * @param {object} [options]
+	 * @return {string}
+	 * @public
+	 */
+
+	function serialize(name, val, options) {
+	  var opt = options || {};
+	  var enc = opt.encode || encode;
+
+	  if (!fieldContentRegExp.test(name)) {
+	    throw new TypeError('argument name is invalid');
+	  }
+
+	  var value = enc(val);
+
+	  if (value && !fieldContentRegExp.test(value)) {
+	    throw new TypeError('argument val is invalid');
+	  }
+
+	  var pairs = [name + '=' + value];
+
+	  if (null != opt.maxAge) {
+	    var maxAge = opt.maxAge - 0;
+	    if (isNaN(maxAge)) throw new Error('maxAge should be a Number');
+	    pairs.push('Max-Age=' + maxAge);
+	  }
+
+	  if (opt.domain) {
+	    if (!fieldContentRegExp.test(opt.domain)) {
+	      throw new TypeError('option domain is invalid');
+	    }
+
+	    pairs.push('Domain=' + opt.domain);
+	  }
+
+	  if (opt.path) {
+	    if (!fieldContentRegExp.test(opt.path)) {
+	      throw new TypeError('option path is invalid');
+	    }
+
+	    pairs.push('Path=' + opt.path);
+	  }
+
+	  if (opt.expires) pairs.push('Expires=' + opt.expires.toUTCString());
+	  if (opt.httpOnly) pairs.push('HttpOnly');
+	  if (opt.secure) pairs.push('Secure');
+
+	  return pairs.join('; ');
+	}
+
+	/**
+	 * Try decoding a string using a decoding function.
+	 *
+	 * @param {string} str
+	 * @param {function} decode
+	 * @private
+	 */
+
+	function tryDecode(str, decode) {
+	  try {
+	    return decode(str);
+	  } catch (e) {
+	    return str;
+	  }
+	}
+
 
 /***/ }
 /******/ ]);

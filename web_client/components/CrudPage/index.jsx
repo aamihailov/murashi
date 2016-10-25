@@ -2,6 +2,7 @@ import React from 'react'
 import { PageHeader, Table } from 'react-bootstrap'
 import { Form, FormGroup, Col, FormControl, Button, ButtonToolbar, ControlLabel } from 'react-bootstrap'
 import { Modal, Popover } from 'react-bootstrap'
+import cookie from 'react-cookie';
 var Format = require('string-format')
 
 var MyTableHeader = React.createClass({
@@ -135,9 +136,11 @@ var MyAddForm = React.createClass({
     this.setState({wrongFields: {}});
     fetch(this.props.urls.api_root, {
       method: 'POST',
+      credentials: 'include',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
+        'X-CSRFToken': cookie.load('csrftoken')
       },
       body: JSON.stringify(this.state.formData)})
     .then((response) => {
@@ -158,9 +161,11 @@ var MyAddForm = React.createClass({
     this.setState({wrongFields: {}});
     fetch(Format(this.props.urls.api_element, this.props.editData.id), {
       method: 'PUT',
+      credentials: 'include',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
+        'X-CSRFToken': cookie.load('csrftoken')
       },
       body: JSON.stringify(this.props.editData)
     })
@@ -179,7 +184,13 @@ var MyAddForm = React.createClass({
   },
 
   handleDelete(id) {
-    fetch(Format(this.props.urls.api_element, this.props.editData.id), {method: 'DELETE'})
+    fetch(Format(this.props.urls.api_element, this.props.editData.id), {
+      method: 'DELETE',
+      credentials: 'include',
+      headers: {
+        'X-CSRFToken': cookie.load('csrftoken')
+      }
+    })
     .then((response) => {this.props.handleClose()})
     .catch((error) => {
       console.error(error);
@@ -299,11 +310,19 @@ const MyCRUDPage = React.createClass({
   handleUpdate() {
     this.setState({editData: null});
 
-    fetch(this.props.urls.api_root)
-    .then((response) => response.json())
-    .then((responseJson) => {
-        this.setState({data: responseJson})
-      })
+    fetch(this.props.urls.api_root, {
+      credentials: 'include',
+      headers: {
+        'X-CSRFToken': cookie.load('csrftoken')
+      }
+    })
+    .then((response) => {
+      if (response.ok) {
+        response.json().then((data) => {
+          this.setState({data: data});
+        })
+      }
+    })
     .catch((error) => {
       console.error(error);
     });

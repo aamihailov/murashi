@@ -7,6 +7,7 @@ import TrainersPage from '../TrainersPage'
 import TrainTypesPage from '../TrainTypesPage'
 import LocationsPage from '../LocationsPage'
 import SubscriptionsPage from '../SubscriptionsPage'
+import GroupsPage from '../GroupsPage'
 
 class App extends Component {
   render() {
@@ -19,7 +20,7 @@ class App extends Component {
           <Route path="client" component={ ClientsPage } />
 
           <Route path="trainer" component={ TrainersPage } />
-          <Route path="group" component={ EmptyPage } />
+          <Route path="group" component={ GroupsPage } />
           <Route path="train-type" component={ TrainTypesPage } />
           <Route path="subscription" component={ SubscriptionsPage } />
           <Route path="location" component={ LocationsPage } />

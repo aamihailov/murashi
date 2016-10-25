@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from articles.models import Client, Trainer, TrainType, Location, Subscription
+from articles.models import *
 
 
 class ClientSerializer(serializers.ModelSerializer):
@@ -61,6 +61,20 @@ class SubscriptionSerializer(serializers.ModelSerializer):
             'visits',
             'validDays',
             'price',
+            'note',
+            'url',
+        ]
+
+
+class GroupSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Group
+        fields = [
+            'id',
+            'name',
+            'trainType',
+            'trainer',
+            'duration',
             'note',
             'url',
         ]
