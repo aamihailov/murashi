@@ -20,6 +20,13 @@
   </head>
   <body>
     <div id="root"></div>
+    <script>
+      window.auth = {
+        "user": "{{ user.get_username }}",
+        "is_authenticated": {{ user.is_authenticated|yesno:"true,false" }},
+        "csrf_token": "{{ csrf_token }}",
+      }
+    </script>
     <script src="{% static 'app.js' %}"></script>
   </body>
 </html>

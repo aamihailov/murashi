@@ -56,7 +56,7 @@
 
 	var _components = __webpack_require__(172);
 
-	__webpack_require__(585);
+	__webpack_require__(594);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -21466,7 +21466,7 @@
 	  }
 	});
 
-	var _CrudPage = __webpack_require__(588);
+	var _CrudPage = __webpack_require__(583);
 
 	Object.defineProperty(exports, 'CrudPage', {
 	  enumerable: true,
@@ -21475,7 +21475,7 @@
 	  }
 	});
 
-	var _EmptyPage = __webpack_require__(589);
+	var _EmptyPage = __webpack_require__(581);
 
 	Object.defineProperty(exports, 'EmptyPage', {
 	  enumerable: true,
@@ -21526,7 +21526,7 @@
 
 	var _LayoutBase2 = _interopRequireDefault(_LayoutBase);
 
-	var _EmptyPage = __webpack_require__(589);
+	var _EmptyPage = __webpack_require__(581);
 
 	var _EmptyPage2 = _interopRequireDefault(_EmptyPage);
 
@@ -21534,23 +21534,23 @@
 
 	var _ClientsPage2 = _interopRequireDefault(_ClientsPage);
 
-	var _TrainersPage = __webpack_require__(590);
+	var _TrainersPage = __webpack_require__(589);
 
 	var _TrainersPage2 = _interopRequireDefault(_TrainersPage);
 
-	var _TrainTypesPage = __webpack_require__(591);
+	var _TrainTypesPage = __webpack_require__(590);
 
 	var _TrainTypesPage2 = _interopRequireDefault(_TrainTypesPage);
 
-	var _LocationsPage = __webpack_require__(592);
+	var _LocationsPage = __webpack_require__(591);
 
 	var _LocationsPage2 = _interopRequireDefault(_LocationsPage);
 
-	var _SubscriptionsPage = __webpack_require__(593);
+	var _SubscriptionsPage = __webpack_require__(592);
 
 	var _SubscriptionsPage2 = _interopRequireDefault(_SubscriptionsPage);
 
-	var _GroupsPage = __webpack_require__(595);
+	var _GroupsPage = __webpack_require__(593);
 
 	var _GroupsPage2 = _interopRequireDefault(_GroupsPage);
 
@@ -28869,6 +28869,8 @@
 
 	var _reactBootstrap = __webpack_require__(325);
 
+	var _reactRouter = __webpack_require__(260);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var Navigation = function (_Component) {
@@ -28882,6 +28884,9 @@
 	  (0, _createClass3.default)(Navigation, [{
 	    key: 'render',
 	    value: function render() {
+	      if (!window.auth.is_authenticated) {
+	        window.location.assign('/api/v0/api-auth/login/?next=' + this.props.activeKey);
+	      }
 	      return _react2.default.createElement(
 	        _reactBootstrap.Navbar,
 	        null,
@@ -28962,6 +28967,19 @@
 	              _reactBootstrap.MenuItem,
 	              { eventKey: '/cashout', href: '/cashout' },
 	              '\u0412\u044B\u043F\u043B\u0430\u0442\u044B'
+	            )
+	          )
+	        ),
+	        _react2.default.createElement(
+	          _reactBootstrap.Nav,
+	          { pullRight: true },
+	          _react2.default.createElement(
+	            _reactBootstrap.NavDropdown,
+	            { title: window.auth.user, id: 'nav-dropdown' },
+	            _react2.default.createElement(
+	              _reactBootstrap.MenuItem,
+	              { href: "/api/v0/api-auth/logout/?next=" + this.props.activeKey },
+	              '\u0412\u044B\u0439\u0442\u0438'
 	            )
 	          )
 	        )
@@ -48101,7 +48119,71 @@
 
 
 /***/ },
-/* 581 */,
+/* 581 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _getPrototypeOf = __webpack_require__(174);
+
+	var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+
+	var _classCallCheck2 = __webpack_require__(200);
+
+	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+	var _createClass2 = __webpack_require__(201);
+
+	var _createClass3 = _interopRequireDefault(_createClass2);
+
+	var _possibleConstructorReturn2 = __webpack_require__(205);
+
+	var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+	var _inherits2 = __webpack_require__(252);
+
+	var _inherits3 = _interopRequireDefault(_inherits2);
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactBootstrap = __webpack_require__(325);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var EmptyPage = function (_Component) {
+	  (0, _inherits3.default)(EmptyPage, _Component);
+
+	  function EmptyPage() {
+	    (0, _classCallCheck3.default)(this, EmptyPage);
+	    return (0, _possibleConstructorReturn3.default)(this, (EmptyPage.__proto__ || (0, _getPrototypeOf2.default)(EmptyPage)).apply(this, arguments));
+	  }
+
+	  (0, _createClass3.default)(EmptyPage, [{
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(
+	          _reactBootstrap.PageHeader,
+	          null,
+	          '\u041F\u0443\u0441\u0442\u0430\u044F \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0430'
+	        )
+	      );
+	    }
+	  }]);
+	  return EmptyPage;
+	}(_react.Component);
+
+	exports.default = EmptyPage;
+
+/***/ },
 /* 582 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -48115,7 +48197,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _CrudPage = __webpack_require__(588);
+	var _CrudPage = __webpack_require__(583);
 
 	var _CrudPage2 = _interopRequireDefault(_CrudPage);
 
@@ -48150,179 +48232,13 @@
 /* 583 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = { "default": __webpack_require__(584), __esModule: true };
-
-/***/ },
-/* 584 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var core  = __webpack_require__(187)
-	  , $JSON = core.JSON || (core.JSON = {stringify: JSON.stringify});
-	module.exports = function stringify(it){ // eslint-disable-line no-unused-vars
-	  return $JSON.stringify.apply($JSON, arguments);
-	};
-
-/***/ },
-/* 585 */
-/***/ function(module, exports, __webpack_require__) {
-
-	// style-loader: Adds some css to the DOM by adding a <style> tag
-
-	// load the styles
-	var content = __webpack_require__(586);
-	if(typeof content === 'string') content = [[module.id, content, '']];
-	// add the styles to the DOM
-	var update = __webpack_require__(580)(content, {});
-	if(content.locals) module.exports = content.locals;
-	// Hot Module Replacement
-	if(false) {
-		// When the styles change, update the <style> tags
-		if(!content.locals) {
-			module.hot.accept("!!./../node_modules/css-loader/index.js!./../node_modules/postcss-loader/index.js!./../node_modules/sass-loader/index.js!./index.scss", function() {
-				var newContent = require("!!./../node_modules/css-loader/index.js!./../node_modules/postcss-loader/index.js!./../node_modules/sass-loader/index.js!./index.scss");
-				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-				update(newContent);
-			});
-		}
-		// When the module is disposed, remove the <style> tags
-		module.hot.dispose(function() { update(); });
-	}
-
-/***/ },
-/* 586 */
-/***/ function(module, exports, __webpack_require__) {
-
-	exports = module.exports = __webpack_require__(579)();
-	// imports
-
-
-	// module
-	exports.push([module.id, "body {\n  margin: 0;\n  padding: 0;\n  font-family: sans-serif; }\n", ""]);
-
-	// exports
-
-
-/***/ },
-/* 587 */
-/***/ function(module, exports, __webpack_require__) {
-
-	// Generated by CoffeeScript 1.8.0
-	(function() {
-	  var ValueError, create, explicitToImplicit, format, implicitToExplicit, lookup, resolve,
-	    __hasProp = {}.hasOwnProperty,
-	    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	    __slice = [].slice;
-
-	  ValueError = (function(_super) {
-	    __extends(ValueError, _super);
-
-	    function ValueError(message) {
-	      this.message = message;
-	    }
-
-	    ValueError.prototype.name = 'ValueError';
-
-	    return ValueError;
-
-	  })(Error);
-
-	  implicitToExplicit = 'cannot switch from implicit to explicit numbering';
-
-	  explicitToImplicit = 'cannot switch from explicit to implicit numbering';
-
-	  create = function(transformers) {
-	    if (transformers == null) {
-	      transformers = {};
-	    }
-	    return function() {
-	      var args, explicit, idx, implicit, message, template;
-	      template = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
-	      idx = 0;
-	      explicit = implicit = false;
-	      message = 'cannot switch from {} to {} numbering';
-	      return template.replace(/([{}])\1|[{](.*?)(?:!(.+?))?[}]/g, function(match, literal, key, transformer) {
-	        var value, _ref, _ref1;
-	        if (literal) {
-	          return literal;
-	        }
-	        if (key.length) {
-	          if (implicit) {
-	            throw new ValueError(implicitToExplicit);
-	          }
-	          explicit = true;
-	          value = (_ref = lookup(args, key)) != null ? _ref : '';
-	        } else {
-	          if (explicit) {
-	            throw new ValueError(explicitToImplicit);
-	          }
-	          implicit = true;
-	          value = (_ref1 = args[idx++]) != null ? _ref1 : '';
-	        }
-	        if (Object.prototype.hasOwnProperty.call(transformers, transformer)) {
-	          return transformers[transformer](value);
-	        } else {
-	          return value;
-	        }
-	      });
-	    };
-	  };
-
-	  lookup = function(object, key) {
-	    var match;
-	    if (!/^(\d+)([.]|$)/.test(key)) {
-	      key = '0.' + key;
-	    }
-	    while (match = /(.+?)[.](.+)/.exec(key)) {
-	      object = resolve(object, match[1]);
-	      key = match[2];
-	    }
-	    return resolve(object, key);
-	  };
-
-	  resolve = function(object, key) {
-	    var value;
-	    value = object[key];
-	    if (typeof value === 'function') {
-	      return value.call(object);
-	    } else {
-	      return value;
-	    }
-	  };
-
-	  format = create({});
-
-	  format.create = create;
-
-	  format.extend = function(prototype, transformers) {
-	    var $format;
-	    $format = create(transformers);
-	    prototype.format = function() {
-	      return $format.apply(null, [this].concat(__slice.call(arguments)));
-	    };
-	  };
-
-	  if (true) {
-	    module.exports = format;
-	  } else if (typeof define === 'function' && define.amd) {
-	    define(format);
-	  } else {
-	    window.format = format;
-	  }
-
-	}).call(this);
-
-
-/***/ },
-/* 588 */
-/***/ function(module, exports, __webpack_require__) {
-
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
 
-	var _stringify = __webpack_require__(583);
+	var _stringify = __webpack_require__(584);
 
 	var _stringify2 = _interopRequireDefault(_stringify);
 
@@ -48332,13 +48248,13 @@
 
 	var _reactBootstrap = __webpack_require__(325);
 
-	var _reactCookie = __webpack_require__(596);
+	var _reactCookie = __webpack_require__(586);
 
 	var _reactCookie2 = _interopRequireDefault(_reactCookie);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var Format = __webpack_require__(587);
+	var Format = __webpack_require__(588);
 
 	var MyTableHeader = _react2.default.createClass({
 	  displayName: 'MyTableHeader',
@@ -48747,301 +48663,26 @@
 	exports.default = MyCRUDPage;
 
 /***/ },
-/* 589 */
+/* 584 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _getPrototypeOf = __webpack_require__(174);
-
-	var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
-
-	var _classCallCheck2 = __webpack_require__(200);
-
-	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
-
-	var _createClass2 = __webpack_require__(201);
-
-	var _createClass3 = _interopRequireDefault(_createClass2);
-
-	var _possibleConstructorReturn2 = __webpack_require__(205);
-
-	var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
-
-	var _inherits2 = __webpack_require__(252);
-
-	var _inherits3 = _interopRequireDefault(_inherits2);
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactBootstrap = __webpack_require__(325);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var EmptyPage = function (_Component) {
-	  (0, _inherits3.default)(EmptyPage, _Component);
-
-	  function EmptyPage() {
-	    (0, _classCallCheck3.default)(this, EmptyPage);
-	    return (0, _possibleConstructorReturn3.default)(this, (EmptyPage.__proto__ || (0, _getPrototypeOf2.default)(EmptyPage)).apply(this, arguments));
-	  }
-
-	  (0, _createClass3.default)(EmptyPage, [{
-	    key: 'render',
-	    value: function render() {
-	      return _react2.default.createElement(
-	        'div',
-	        null,
-	        _react2.default.createElement(
-	          _reactBootstrap.PageHeader,
-	          null,
-	          '\u041F\u0443\u0441\u0442\u0430\u044F \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0430'
-	        )
-	      );
-	    }
-	  }]);
-	  return EmptyPage;
-	}(_react.Component);
-
-	exports.default = EmptyPage;
+	module.exports = { "default": __webpack_require__(585), __esModule: true };
 
 /***/ },
-/* 590 */
+/* 585 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _CrudPage = __webpack_require__(588);
-
-	var _CrudPage2 = _interopRequireDefault(_CrudPage);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var SCHEMA = {
-	  fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Имя" }, { id: "phone", name: "Телефон" }, { id: "balance", name: "Баланс" }, { id: "note", name: "Примечание", type: "textarea" }],
-	  strings: {
-	    page_header: "Тренеры",
-	    add_label: "Добавить тренера",
-	    edit_label: "Редактировать тренера",
-	    add_label_short: "Добавить",
-	    update_label_short: "Обновить",
-	    delete_label_short: "Удалить"
-	  },
-	  urls: {
-	    api_root: "http://localhost:5000/api/v0/trainers/?format=json",
-	    api_element: "http://localhost:5000/api/v0/trainers/{0}/?format=json"
-	  }
+	var core  = __webpack_require__(187)
+	  , $JSON = core.JSON || (core.JSON = {stringify: JSON.stringify});
+	module.exports = function stringify(it){ // eslint-disable-line no-unused-vars
+	  return $JSON.stringify.apply($JSON, arguments);
 	};
 
-	var Page = _react2.default.createClass({
-	  displayName: 'Page',
-	  render: function render() {
-	    return _react2.default.createElement(_CrudPage2.default, { strings: SCHEMA.strings, schema: SCHEMA.fields, urls: SCHEMA.urls, data: [] });
-	  }
-	});
-
-	exports.default = Page;
-
 /***/ },
-/* 591 */
+/* 586 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _CrudPage = __webpack_require__(588);
-
-	var _CrudPage2 = _interopRequireDefault(_CrudPage);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var SCHEMA = {
-	  fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Название" }, { id: "note", name: "Примечание", type: "textarea" }],
-	  strings: {
-	    page_header: "Направления тренировок",
-	    add_label: "Добавить направление тренировок",
-	    edit_label: "Редактировать направление тренировок",
-	    add_label_short: "Добавить",
-	    update_label_short: "Обновить",
-	    delete_label_short: "Удалить"
-	  },
-	  urls: {
-	    api_root: "http://localhost:5000/api/v0/train-types/?format=json",
-	    api_element: "http://localhost:5000/api/v0/train-types/{0}/?format=json"
-	  }
-	};
-
-	var Page = _react2.default.createClass({
-	  displayName: 'Page',
-	  render: function render() {
-	    return _react2.default.createElement(_CrudPage2.default, { strings: SCHEMA.strings, schema: SCHEMA.fields, urls: SCHEMA.urls, data: [] });
-	  }
-	});
-
-	exports.default = Page;
-
-/***/ },
-/* 592 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _CrudPage = __webpack_require__(588);
-
-	var _CrudPage2 = _interopRequireDefault(_CrudPage);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var SCHEMA = {
-	  fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Название" }, { id: "note", name: "Примечание", type: "textarea" }],
-	  strings: {
-	    page_header: "Залы",
-	    add_label: "Добавить зал",
-	    edit_label: "Редактировать зал",
-	    add_label_short: "Добавить",
-	    update_label_short: "Обновить",
-	    delete_label_short: "Удалить"
-	  },
-	  urls: {
-	    api_root: "http://localhost:5000/api/v0/locations/?format=json",
-	    api_element: "http://localhost:5000/api/v0/locations/{0}/?format=json"
-	  }
-	};
-
-	var Page = _react2.default.createClass({
-	  displayName: 'Page',
-	  render: function render() {
-	    return _react2.default.createElement(_CrudPage2.default, { strings: SCHEMA.strings, schema: SCHEMA.fields, urls: SCHEMA.urls, data: [] });
-	  }
-	});
-
-	exports.default = Page;
-
-/***/ },
-/* 593 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _CrudPage = __webpack_require__(588);
-
-	var _CrudPage2 = _interopRequireDefault(_CrudPage);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var SCHEMA = {
-	  fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Название" }, { id: "visits", name: "Занятий" }, { id: "validDays", name: "Срок действия" }, { id: "price", name: "Стоимость" }, { id: "note", name: "Примечание", type: "textarea" }],
-	  strings: {
-	    page_header: "Абонементы",
-	    add_label: "Добавить абонемент",
-	    edit_label: "Редактировать абонемент",
-	    add_label_short: "Добавить",
-	    update_label_short: "Обновить",
-	    delete_label_short: "Удалить"
-	  },
-	  urls: {
-	    api_root: "http://localhost:5000/api/v0/subscriptions/?format=json",
-	    api_element: "http://localhost:5000/api/v0/subscriptions/{0}/?format=json"
-	  }
-	};
-
-	var Page = _react2.default.createClass({
-	  displayName: 'Page',
-	  render: function render() {
-	    return _react2.default.createElement(_CrudPage2.default, { strings: SCHEMA.strings, schema: SCHEMA.fields, urls: SCHEMA.urls, data: [] });
-	  }
-	});
-
-	exports.default = Page;
-
-/***/ },
-/* 594 */,
-/* 595 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _CrudPage = __webpack_require__(588);
-
-	var _CrudPage2 = _interopRequireDefault(_CrudPage);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var SCHEMA = {
-	  fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Название" }, { id: "trainType", name: "Направление тренировок" }, { id: "trainer", name: "Тренер" }, { id: "duration", name: "Продолжительность" }, { id: "note", name: "Примечание", type: "textarea" }],
-	  strings: {
-	    page_header: "Группы",
-	    add_label: "Добавить группу",
-	    edit_label: "Редактировать группу",
-	    add_label_short: "Добавить",
-	    update_label_short: "Обновить",
-	    delete_label_short: "Удалить"
-	  },
-	  urls: {
-	    api_root: "http://localhost:5000/api/v0/groups/?format=json",
-	    api_element: "http://localhost:5000/api/v0/groups/{0}/?format=json"
-	  }
-	};
-
-	var Page = _react2.default.createClass({
-	  displayName: 'Page',
-	  render: function render() {
-	    return _react2.default.createElement(_CrudPage2.default, { strings: SCHEMA.strings, schema: SCHEMA.fields, urls: SCHEMA.urls, data: [] });
-	  }
-	});
-
-	exports.default = Page;
-
-/***/ },
-/* 596 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var cookie = __webpack_require__(597);
+	var cookie = __webpack_require__(587);
 
 	if (typeof Object.assign != 'function') {
 	  Object.assign = function(target) {
@@ -49191,7 +48832,7 @@
 
 
 /***/ },
-/* 597 */
+/* 587 */
 /***/ function(module, exports) {
 
 	/*!
@@ -49350,6 +48991,381 @@
 	    return str;
 	  }
 	}
+
+
+/***/ },
+/* 588 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// Generated by CoffeeScript 1.8.0
+	(function() {
+	  var ValueError, create, explicitToImplicit, format, implicitToExplicit, lookup, resolve,
+	    __hasProp = {}.hasOwnProperty,
+	    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	    __slice = [].slice;
+
+	  ValueError = (function(_super) {
+	    __extends(ValueError, _super);
+
+	    function ValueError(message) {
+	      this.message = message;
+	    }
+
+	    ValueError.prototype.name = 'ValueError';
+
+	    return ValueError;
+
+	  })(Error);
+
+	  implicitToExplicit = 'cannot switch from implicit to explicit numbering';
+
+	  explicitToImplicit = 'cannot switch from explicit to implicit numbering';
+
+	  create = function(transformers) {
+	    if (transformers == null) {
+	      transformers = {};
+	    }
+	    return function() {
+	      var args, explicit, idx, implicit, message, template;
+	      template = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
+	      idx = 0;
+	      explicit = implicit = false;
+	      message = 'cannot switch from {} to {} numbering';
+	      return template.replace(/([{}])\1|[{](.*?)(?:!(.+?))?[}]/g, function(match, literal, key, transformer) {
+	        var value, _ref, _ref1;
+	        if (literal) {
+	          return literal;
+	        }
+	        if (key.length) {
+	          if (implicit) {
+	            throw new ValueError(implicitToExplicit);
+	          }
+	          explicit = true;
+	          value = (_ref = lookup(args, key)) != null ? _ref : '';
+	        } else {
+	          if (explicit) {
+	            throw new ValueError(explicitToImplicit);
+	          }
+	          implicit = true;
+	          value = (_ref1 = args[idx++]) != null ? _ref1 : '';
+	        }
+	        if (Object.prototype.hasOwnProperty.call(transformers, transformer)) {
+	          return transformers[transformer](value);
+	        } else {
+	          return value;
+	        }
+	      });
+	    };
+	  };
+
+	  lookup = function(object, key) {
+	    var match;
+	    if (!/^(\d+)([.]|$)/.test(key)) {
+	      key = '0.' + key;
+	    }
+	    while (match = /(.+?)[.](.+)/.exec(key)) {
+	      object = resolve(object, match[1]);
+	      key = match[2];
+	    }
+	    return resolve(object, key);
+	  };
+
+	  resolve = function(object, key) {
+	    var value;
+	    value = object[key];
+	    if (typeof value === 'function') {
+	      return value.call(object);
+	    } else {
+	      return value;
+	    }
+	  };
+
+	  format = create({});
+
+	  format.create = create;
+
+	  format.extend = function(prototype, transformers) {
+	    var $format;
+	    $format = create(transformers);
+	    prototype.format = function() {
+	      return $format.apply(null, [this].concat(__slice.call(arguments)));
+	    };
+	  };
+
+	  if (true) {
+	    module.exports = format;
+	  } else if (typeof define === 'function' && define.amd) {
+	    define(format);
+	  } else {
+	    window.format = format;
+	  }
+
+	}).call(this);
+
+
+/***/ },
+/* 589 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _CrudPage = __webpack_require__(583);
+
+	var _CrudPage2 = _interopRequireDefault(_CrudPage);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var SCHEMA = {
+	  fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Имя" }, { id: "phone", name: "Телефон" }, { id: "balance", name: "Баланс" }, { id: "note", name: "Примечание", type: "textarea" }],
+	  strings: {
+	    page_header: "Тренеры",
+	    add_label: "Добавить тренера",
+	    edit_label: "Редактировать тренера",
+	    add_label_short: "Добавить",
+	    update_label_short: "Обновить",
+	    delete_label_short: "Удалить"
+	  },
+	  urls: {
+	    api_root: "http://localhost:5000/api/v0/trainers/?format=json",
+	    api_element: "http://localhost:5000/api/v0/trainers/{0}/?format=json"
+	  }
+	};
+
+	var Page = _react2.default.createClass({
+	  displayName: 'Page',
+	  render: function render() {
+	    return _react2.default.createElement(_CrudPage2.default, { strings: SCHEMA.strings, schema: SCHEMA.fields, urls: SCHEMA.urls, data: [] });
+	  }
+	});
+
+	exports.default = Page;
+
+/***/ },
+/* 590 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _CrudPage = __webpack_require__(583);
+
+	var _CrudPage2 = _interopRequireDefault(_CrudPage);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var SCHEMA = {
+	  fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Название" }, { id: "note", name: "Примечание", type: "textarea" }],
+	  strings: {
+	    page_header: "Направления тренировок",
+	    add_label: "Добавить направление тренировок",
+	    edit_label: "Редактировать направление тренировок",
+	    add_label_short: "Добавить",
+	    update_label_short: "Обновить",
+	    delete_label_short: "Удалить"
+	  },
+	  urls: {
+	    api_root: "http://localhost:5000/api/v0/train-types/?format=json",
+	    api_element: "http://localhost:5000/api/v0/train-types/{0}/?format=json"
+	  }
+	};
+
+	var Page = _react2.default.createClass({
+	  displayName: 'Page',
+	  render: function render() {
+	    return _react2.default.createElement(_CrudPage2.default, { strings: SCHEMA.strings, schema: SCHEMA.fields, urls: SCHEMA.urls, data: [] });
+	  }
+	});
+
+	exports.default = Page;
+
+/***/ },
+/* 591 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _CrudPage = __webpack_require__(583);
+
+	var _CrudPage2 = _interopRequireDefault(_CrudPage);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var SCHEMA = {
+	  fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Название" }, { id: "note", name: "Примечание", type: "textarea" }],
+	  strings: {
+	    page_header: "Залы",
+	    add_label: "Добавить зал",
+	    edit_label: "Редактировать зал",
+	    add_label_short: "Добавить",
+	    update_label_short: "Обновить",
+	    delete_label_short: "Удалить"
+	  },
+	  urls: {
+	    api_root: "http://localhost:5000/api/v0/locations/?format=json",
+	    api_element: "http://localhost:5000/api/v0/locations/{0}/?format=json"
+	  }
+	};
+
+	var Page = _react2.default.createClass({
+	  displayName: 'Page',
+	  render: function render() {
+	    return _react2.default.createElement(_CrudPage2.default, { strings: SCHEMA.strings, schema: SCHEMA.fields, urls: SCHEMA.urls, data: [] });
+	  }
+	});
+
+	exports.default = Page;
+
+/***/ },
+/* 592 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _CrudPage = __webpack_require__(583);
+
+	var _CrudPage2 = _interopRequireDefault(_CrudPage);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var SCHEMA = {
+	  fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Название" }, { id: "visits", name: "Занятий" }, { id: "validDays", name: "Срок действия" }, { id: "price", name: "Стоимость" }, { id: "note", name: "Примечание", type: "textarea" }],
+	  strings: {
+	    page_header: "Абонементы",
+	    add_label: "Добавить абонемент",
+	    edit_label: "Редактировать абонемент",
+	    add_label_short: "Добавить",
+	    update_label_short: "Обновить",
+	    delete_label_short: "Удалить"
+	  },
+	  urls: {
+	    api_root: "http://localhost:5000/api/v0/subscriptions/?format=json",
+	    api_element: "http://localhost:5000/api/v0/subscriptions/{0}/?format=json"
+	  }
+	};
+
+	var Page = _react2.default.createClass({
+	  displayName: 'Page',
+	  render: function render() {
+	    return _react2.default.createElement(_CrudPage2.default, { strings: SCHEMA.strings, schema: SCHEMA.fields, urls: SCHEMA.urls, data: [] });
+	  }
+	});
+
+	exports.default = Page;
+
+/***/ },
+/* 593 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _CrudPage = __webpack_require__(583);
+
+	var _CrudPage2 = _interopRequireDefault(_CrudPage);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var SCHEMA = {
+	  fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Название" }, { id: "trainType", name: "Направление тренировок" }, { id: "trainer", name: "Тренер" }, { id: "duration", name: "Продолжительность" }, { id: "note", name: "Примечание", type: "textarea" }],
+	  strings: {
+	    page_header: "Группы",
+	    add_label: "Добавить группу",
+	    edit_label: "Редактировать группу",
+	    add_label_short: "Добавить",
+	    update_label_short: "Обновить",
+	    delete_label_short: "Удалить"
+	  },
+	  urls: {
+	    api_root: "http://localhost:5000/api/v0/groups/?format=json",
+	    api_element: "http://localhost:5000/api/v0/groups/{0}/?format=json"
+	  }
+	};
+
+	var Page = _react2.default.createClass({
+	  displayName: 'Page',
+	  render: function render() {
+	    return _react2.default.createElement(_CrudPage2.default, { strings: SCHEMA.strings, schema: SCHEMA.fields, urls: SCHEMA.urls, data: [] });
+	  }
+	});
+
+	exports.default = Page;
+
+/***/ },
+/* 594 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(595);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(580)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../node_modules/css-loader/index.js!./../node_modules/postcss-loader/index.js!./../node_modules/sass-loader/index.js!./index.scss", function() {
+				var newContent = require("!!./../node_modules/css-loader/index.js!./../node_modules/postcss-loader/index.js!./../node_modules/sass-loader/index.js!./index.scss");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 595 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(579)();
+	// imports
+
+
+	// module
+	exports.push([module.id, "body {\n  margin: 0;\n  padding: 0;\n  font-family: sans-serif; }\n", ""]);
+
+	// exports
 
 
 /***/ }

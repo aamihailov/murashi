@@ -1,8 +1,12 @@
 import React, { Component } from 'react'
 import { Navbar, Nav, NavItem, NavDropdown, MenuItem } from 'react-bootstrap'
+import { browserHistory } from 'react-router';
 
 class Navigation extends Component {
   render() {
+    if (!window.auth.is_authenticated) {
+      window.location.assign('/api/v0/api-auth/login/?next=' + this.props.activeKey);
+    }
     return (
       <Navbar>
         <Navbar.Header>
@@ -25,6 +29,11 @@ class Navigation extends Component {
             <MenuItem eventKey="/discount" href="/discount">Скидки</MenuItem>
             <MenuItem eventKey="/debtors" href="/debtors">Должники</MenuItem>
             <MenuItem eventKey="/cashout" href="/cashout">Выплаты</MenuItem>
+          </NavDropdown>
+        </Nav>
+        <Nav pullRight>
+          <NavDropdown title={window.auth.user} id="nav-dropdown">
+            <MenuItem href={"/api/v0/api-auth/logout/?next=" + this.props.activeKey}>Выйти</MenuItem>
           </NavDropdown>
         </Nav>
       </Navbar>
