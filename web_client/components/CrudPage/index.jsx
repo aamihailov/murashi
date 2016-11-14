@@ -310,7 +310,7 @@ const MyCRUDPage = React.createClass({
   handleUpdate() {
     this.setState({editData: null});
 
-    fetch(this.props.urls.api_root, {
+    fetch(this.props.schema[this.props.model].urls.api_root, {
       credentials: 'include',
       headers: {
         'X-CSRFToken': cookie.load('csrftoken')
@@ -337,15 +337,16 @@ const MyCRUDPage = React.createClass({
   },
 
   render(){
+    var schema = this.props.schema[this.props.model];
     return(
       <div>
-        <PageHeader>{this.props.strings.page_header}</PageHeader>
-        <MyTable schema={this.props.schema}
+        <PageHeader>{schema.strings.page_header}</PageHeader>
+        <MyTable schema={schema.fields}
                  data={this.state.data}
                  handleEdit={this.handleEdit}/>
-        <MyAddModal schema={this.props.schema}
-                    strings={this.props.strings}
-                    urls={this.props.urls}
+        <MyAddModal schema={schema.fields}
+                    strings={schema.strings}
+                    urls={schema.urls}
                     editData={this.state.editData}
                     handleUpdate={this.handleUpdate}
                     handleEdit={this.handleEdit}/>

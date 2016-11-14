@@ -11,7 +11,7 @@ class Navigation extends Component {
       <Navbar>
         <Navbar.Header>
           <Navbar.Brand>
-            <a href="/">Polesys</a>
+            <a href="/">Murashi</a>
           </Navbar.Brand>
         </Navbar.Header>
         <Nav bsStyle="tabs" activeKey={this.props.activeKey}>
