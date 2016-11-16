@@ -56,7 +56,7 @@
 
 	var _components = __webpack_require__(172);
 
-	__webpack_require__(514);
+	__webpack_require__(515);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -21534,23 +21534,23 @@
 
 	var _ClientsPage2 = _interopRequireDefault(_ClientsPage);
 
-	var _TrainersPage = __webpack_require__(509);
+	var _TrainersPage = __webpack_require__(510);
 
 	var _TrainersPage2 = _interopRequireDefault(_TrainersPage);
 
-	var _TrainTypesPage = __webpack_require__(510);
+	var _TrainTypesPage = __webpack_require__(511);
 
 	var _TrainTypesPage2 = _interopRequireDefault(_TrainTypesPage);
 
-	var _LocationsPage = __webpack_require__(511);
+	var _LocationsPage = __webpack_require__(512);
 
 	var _LocationsPage2 = _interopRequireDefault(_LocationsPage);
 
-	var _SubscriptionsPage = __webpack_require__(512);
+	var _SubscriptionsPage = __webpack_require__(513);
 
 	var _SubscriptionsPage2 = _interopRequireDefault(_SubscriptionsPage);
 
-	var _GroupsPage = __webpack_require__(513);
+	var _GroupsPage = __webpack_require__(514);
 
 	var _GroupsPage2 = _interopRequireDefault(_GroupsPage);
 
@@ -46621,7 +46621,7 @@
 
 	var _CrudPage2 = _interopRequireDefault(_CrudPage);
 
-	var _schema = __webpack_require__(516);
+	var _schema = __webpack_require__(509);
 
 	var _schema2 = _interopRequireDefault(_schema);
 
@@ -46630,7 +46630,7 @@
 	var Page = _react2.default.createClass({
 	  displayName: 'Page',
 	  render: function render() {
-	    return _react2.default.createElement(_CrudPage2.default, { model: 'clients', schema: _schema2.default, data: [] });
+	    return _react2.default.createElement(_CrudPage2.default, { model: 'clients', schema: _schema2.default });
 	  }
 	});
 
@@ -46721,10 +46721,10 @@
 	  render: function render() {
 	    var rows = [];
 	    var schema = this.props.schema;
-	    var data = this.props.data;
+	    var dataList = this.props.dataList;
 
 	    var handleEdit = this.props.handleEdit;
-	    data.forEach(function (el) {
+	    dataList.forEach(function (el) {
 	      rows.push(_react2.default.createElement(MyTableRow, { key: el.id, schema: schema, rowData: el, handleEdit: handleEdit }));
 	    });
 
@@ -46820,10 +46820,10 @@
 	    return { formData: {}, wrongFields: {} };
 	  },
 	  handleChange: function handleChange(e) {
-	    if (this.props.editData) {
-	      var editData = this.props.editData;
-	      editData[e.target.id] = e.target.value;
-	      this.props.handleEdit(editData);
+	    if (this.props.dataElement) {
+	      var dataElement = this.props.dataElement;
+	      dataElement[e.target.id] = e.target.value;
+	      this.props.handleEdit(dataElement);
 	    } else {
 	      var formData = this.state.formData;
 	      formData[e.target.id] = e.target.value;
@@ -46858,7 +46858,7 @@
 	    var _this2 = this;
 
 	    this.setState({ wrongFields: {} });
-	    fetch(Format(this.props.urls.api_element, this.props.editData.id), {
+	    fetch(Format(this.props.urls.api_element, this.props.dataElement.id), {
 	      method: 'PUT',
 	      credentials: 'include',
 	      headers: {
@@ -46866,7 +46866,7 @@
 	        'Content-Type': 'application/json',
 	        'X-CSRFToken': _reactCookie2.default.load('csrftoken')
 	      },
-	      body: (0, _stringify2.default)(this.props.editData)
+	      body: (0, _stringify2.default)(this.props.dataElement)
 	    }).then(function (response) {
 	      if (response.ok) {
 	        _this2.props.handleClose();
@@ -46882,7 +46882,7 @@
 	  handleDelete: function handleDelete(id) {
 	    var _this3 = this;
 
-	    fetch(Format(this.props.urls.api_element, this.props.editData.id), {
+	    fetch(Format(this.props.urls.api_element, this.props.dataElement.id), {
 	      method: 'DELETE',
 	      credentials: 'include',
 	      headers: {
@@ -46899,11 +46899,11 @@
 	    var schema = this.props.schema;
 	    var handleChange = this.handleChange;
 
-	    var editData = this.props.editData ? this.props.editData : {};
+	    var dataElement = this.props.dataElement ? this.props.dataElement : {};
 	    var wrong = this.state.wrongFields;
 	    schema.forEach(function (el) {
 	      if (!el.readonly) {
-	        var editValue = editData[el.id];
+	        var editValue = dataElement[el.id];
 	        controls.push(_react2.default.createElement(MyAddFormRow, { key: el.id,
 	          id: el.id,
 	          wrong: wrong[el.id],
@@ -46915,7 +46915,7 @@
 	    });
 
 	    var buttons = [];
-	    if (this.props.editData == null) {
+	    if (this.props.dataElement == null) {
 	      buttons.push(_react2.default.createElement(
 	        _reactBootstrap.Button,
 	        { key: 'create', bsStyle: 'primary', onClick: this.handleCreate },
@@ -46971,8 +46971,8 @@
 	    var schema = this.props.schema;
 	    var strings = this.props.strings;
 	    var urls = this.props.urls;
-	    var show = this.props.editData ? true : this.state.showModal;
-	    var title = this.props.editData ? strings.edit_label : strings.add_label;
+	    var show = this.props.dataElement ? true : this.state.showModal;
+	    var title = this.props.dataElement ? strings.edit_label : strings.add_label;
 	    return _react2.default.createElement(
 	      'div',
 	      null,
@@ -47001,7 +47001,7 @@
 	            urls: urls,
 	            handleClose: this.handleClose,
 	            handleEdit: this.props.handleEdit,
-	            editData: this.props.editData
+	            dataElement: this.props.dataElement
 	          })
 	        )
 	      )
@@ -47013,14 +47013,14 @@
 	  displayName: 'MyCRUDPage',
 	  getInitialState: function getInitialState() {
 	    return {
-	      data: this.props.data,
-	      editData: null
+	      dataList: [],
+	      dataElement: null
 	    };
 	  },
 	  handleUpdate: function handleUpdate() {
 	    var _this4 = this;
 
-	    this.setState({ editData: null });
+	    this.setState({ dataElement: null });
 
 	    fetch(this.props.schema[this.props.model].urls.api_root, {
 	      credentials: 'include',
@@ -47029,8 +47029,8 @@
 	      }
 	    }).then(function (response) {
 	      if (response.ok) {
-	        response.json().then(function (data) {
-	          _this4.setState({ data: data });
+	        response.json().then(function (dataList) {
+	          _this4.setState({ dataList: dataList });
 	        });
 	      }
 	    }).catch(function (error) {
@@ -47038,7 +47038,7 @@
 	    });
 	  },
 	  handleEdit: function handleEdit(d) {
-	    this.setState({ editData: d });
+	    this.setState({ dataElement: d });
 	  },
 
 
@@ -47057,12 +47057,12 @@
 	        schema.strings.page_header
 	      ),
 	      _react2.default.createElement(MyTable, { schema: schema.fields,
-	        data: this.state.data,
+	        dataList: this.state.dataList,
 	        handleEdit: this.handleEdit }),
 	      _react2.default.createElement(MyAddModal, { schema: schema.fields,
 	        strings: schema.strings,
 	        urls: schema.urls,
-	        editData: this.state.editData,
+	        dataElement: this.state.dataElement,
 	        handleUpdate: this.handleUpdate,
 	        handleEdit: this.handleEdit })
 	    );
@@ -47514,211 +47514,6 @@
 
 /***/ },
 /* 509 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _CrudPage = __webpack_require__(503);
-
-	var _CrudPage2 = _interopRequireDefault(_CrudPage);
-
-	var _schema = __webpack_require__(516);
-
-	var _schema2 = _interopRequireDefault(_schema);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var Page = _react2.default.createClass({
-	  displayName: 'Page',
-	  render: function render() {
-	    return _react2.default.createElement(_CrudPage2.default, { model: 'trainers', schema: _schema2.default, data: [] });
-	  }
-	});
-
-	exports.default = Page;
-
-/***/ },
-/* 510 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _CrudPage = __webpack_require__(503);
-
-	var _CrudPage2 = _interopRequireDefault(_CrudPage);
-
-	var _schema = __webpack_require__(516);
-
-	var _schema2 = _interopRequireDefault(_schema);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var Page = _react2.default.createClass({
-	  displayName: 'Page',
-	  render: function render() {
-	    return _react2.default.createElement(_CrudPage2.default, { model: 'trainTypes', schema: _schema2.default, data: [] });
-	  }
-	});
-
-	exports.default = Page;
-
-/***/ },
-/* 511 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _CrudPage = __webpack_require__(503);
-
-	var _CrudPage2 = _interopRequireDefault(_CrudPage);
-
-	var _schema = __webpack_require__(516);
-
-	var _schema2 = _interopRequireDefault(_schema);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var Page = _react2.default.createClass({
-	  displayName: 'Page',
-	  render: function render() {
-	    return _react2.default.createElement(_CrudPage2.default, { model: 'locations', schema: _schema2.default, data: [] });
-	  }
-	});
-
-	exports.default = Page;
-
-/***/ },
-/* 512 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _CrudPage = __webpack_require__(503);
-
-	var _CrudPage2 = _interopRequireDefault(_CrudPage);
-
-	var _schema = __webpack_require__(516);
-
-	var _schema2 = _interopRequireDefault(_schema);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var Page = _react2.default.createClass({
-	  displayName: 'Page',
-	  render: function render() {
-	    return _react2.default.createElement(_CrudPage2.default, { model: 'subscriptions', schema: _schema2.default, data: [] });
-	  }
-	});
-
-	exports.default = Page;
-
-/***/ },
-/* 513 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _CrudPage = __webpack_require__(503);
-
-	var _CrudPage2 = _interopRequireDefault(_CrudPage);
-
-	var _schema = __webpack_require__(516);
-
-	var _schema2 = _interopRequireDefault(_schema);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var Page = _react2.default.createClass({
-	  displayName: 'Page',
-	  render: function render() {
-	    return _react2.default.createElement(_CrudPage2.default, { model: 'groups', schema: _schema2.default, data: [] });
-	  }
-	});
-
-	exports.default = Page;
-
-/***/ },
-/* 514 */
-/***/ function(module, exports, __webpack_require__) {
-
-	// style-loader: Adds some css to the DOM by adding a <style> tag
-
-	// load the styles
-	var content = __webpack_require__(515);
-	if(typeof content === 'string') content = [[module.id, content, '']];
-	// add the styles to the DOM
-	var update = __webpack_require__(500)(content, {});
-	if(content.locals) module.exports = content.locals;
-	// Hot Module Replacement
-	if(false) {
-		// When the styles change, update the <style> tags
-		if(!content.locals) {
-			module.hot.accept("!!./../node_modules/css-loader/index.js!./../node_modules/postcss-loader/index.js!./../node_modules/sass-loader/index.js!./index.scss", function() {
-				var newContent = require("!!./../node_modules/css-loader/index.js!./../node_modules/postcss-loader/index.js!./../node_modules/sass-loader/index.js!./index.scss");
-				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-				update(newContent);
-			});
-		}
-		// When the module is disposed, remove the <style> tags
-		module.hot.dispose(function() { update(); });
-	}
-
-/***/ },
-/* 515 */
-/***/ function(module, exports, __webpack_require__) {
-
-	exports = module.exports = __webpack_require__(499)();
-	// imports
-
-
-	// module
-	exports.push([module.id, "body {\n  margin: 0;\n  padding: 0;\n  font-family: sans-serif; }\n", ""]);
-
-	// exports
-
-
-/***/ },
-/* 516 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -47825,6 +47620,211 @@
 	};
 
 	exports.default = SCHEMA;
+
+/***/ },
+/* 510 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _CrudPage = __webpack_require__(503);
+
+	var _CrudPage2 = _interopRequireDefault(_CrudPage);
+
+	var _schema = __webpack_require__(509);
+
+	var _schema2 = _interopRequireDefault(_schema);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var Page = _react2.default.createClass({
+	  displayName: 'Page',
+	  render: function render() {
+	    return _react2.default.createElement(_CrudPage2.default, { model: 'trainers', schema: _schema2.default });
+	  }
+	});
+
+	exports.default = Page;
+
+/***/ },
+/* 511 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _CrudPage = __webpack_require__(503);
+
+	var _CrudPage2 = _interopRequireDefault(_CrudPage);
+
+	var _schema = __webpack_require__(509);
+
+	var _schema2 = _interopRequireDefault(_schema);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var Page = _react2.default.createClass({
+	  displayName: 'Page',
+	  render: function render() {
+	    return _react2.default.createElement(_CrudPage2.default, { model: 'trainTypes', schema: _schema2.default });
+	  }
+	});
+
+	exports.default = Page;
+
+/***/ },
+/* 512 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _CrudPage = __webpack_require__(503);
+
+	var _CrudPage2 = _interopRequireDefault(_CrudPage);
+
+	var _schema = __webpack_require__(509);
+
+	var _schema2 = _interopRequireDefault(_schema);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var Page = _react2.default.createClass({
+	  displayName: 'Page',
+	  render: function render() {
+	    return _react2.default.createElement(_CrudPage2.default, { model: 'locations', schema: _schema2.default });
+	  }
+	});
+
+	exports.default = Page;
+
+/***/ },
+/* 513 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _CrudPage = __webpack_require__(503);
+
+	var _CrudPage2 = _interopRequireDefault(_CrudPage);
+
+	var _schema = __webpack_require__(509);
+
+	var _schema2 = _interopRequireDefault(_schema);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var Page = _react2.default.createClass({
+	  displayName: 'Page',
+	  render: function render() {
+	    return _react2.default.createElement(_CrudPage2.default, { model: 'subscriptions', schema: _schema2.default });
+	  }
+	});
+
+	exports.default = Page;
+
+/***/ },
+/* 514 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _CrudPage = __webpack_require__(503);
+
+	var _CrudPage2 = _interopRequireDefault(_CrudPage);
+
+	var _schema = __webpack_require__(509);
+
+	var _schema2 = _interopRequireDefault(_schema);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var Page = _react2.default.createClass({
+	  displayName: 'Page',
+	  render: function render() {
+	    return _react2.default.createElement(_CrudPage2.default, { model: 'groups', schema: _schema2.default });
+	  }
+	});
+
+	exports.default = Page;
+
+/***/ },
+/* 515 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(516);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(500)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../node_modules/css-loader/index.js!./../node_modules/postcss-loader/index.js!./../node_modules/sass-loader/index.js!./index.scss", function() {
+				var newContent = require("!!./../node_modules/css-loader/index.js!./../node_modules/postcss-loader/index.js!./../node_modules/sass-loader/index.js!./index.scss");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 516 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(499)();
+	// imports
+
+
+	// module
+	exports.push([module.id, "body {\n  margin: 0;\n  padding: 0;\n  font-family: sans-serif; }\n", ""]);
+
+	// exports
+
 
 /***/ }
 /******/ ]);

@@ -44,10 +44,10 @@ var MyTable = React.createClass({
   render(){
     var rows = [];
     var schema = this.props.schema;
-    var data = this.props.data;
+    var dataList = this.props.dataList;
 
     var handleEdit = this.props.handleEdit;
-    data.forEach(function(el) {
+    dataList.forEach(function(el) {
       rows.push(<MyTableRow key={el.id} schema={schema} rowData={el} handleEdit={handleEdit}/>)
     });
 
@@ -121,10 +121,10 @@ var MyAddForm = React.createClass({
   },
 
   handleChange(e) {
-    if (this.props.editData) {
-      var editData = this.props.editData;
-      editData[e.target.id] = e.target.value;
-      this.props.handleEdit(editData);
+    if (this.props.dataElement) {
+      var dataElement = this.props.dataElement;
+      dataElement[e.target.id] = e.target.value;
+      this.props.handleEdit(dataElement);
     } else {
       var formData = this.state.formData;
       formData[e.target.id] = e.target.value;
@@ -159,7 +159,7 @@ var MyAddForm = React.createClass({
 
   handleUpdate(id) {
     this.setState({wrongFields: {}});
-    fetch(Format(this.props.urls.api_element, this.props.editData.id), {
+    fetch(Format(this.props.urls.api_element, this.props.dataElement.id), {
       method: 'PUT',
       credentials: 'include',
       headers: {
@@ -167,7 +167,7 @@ var MyAddForm = React.createClass({
         'Content-Type': 'application/json',
         'X-CSRFToken': cookie.load('csrftoken')
       },
-      body: JSON.stringify(this.props.editData)
+      body: JSON.stringify(this.props.dataElement)
     })
     .then((response) => {
       if (response.ok) {
@@ -184,7 +184,7 @@ var MyAddForm = React.createClass({
   },
 
   handleDelete(id) {
-    fetch(Format(this.props.urls.api_element, this.props.editData.id), {
+    fetch(Format(this.props.urls.api_element, this.props.dataElement.id), {
       method: 'DELETE',
       credentials: 'include',
       headers: {
@@ -202,11 +202,11 @@ var MyAddForm = React.createClass({
     var schema = this.props.schema;
     var handleChange = this.handleChange;
 
-    var editData = this.props.editData ? this.props.editData : {};
+    var dataElement = this.props.dataElement ? this.props.dataElement : {};
     var wrong = this.state.wrongFields;
     schema.forEach(function(el) {
       if (!el.readonly) {
-        var editValue = editData[el.id];
+        var editValue = dataElement[el.id];
         controls.push(
           <MyAddFormRow key={el.id}
             id={el.id}
@@ -220,7 +220,7 @@ var MyAddForm = React.createClass({
     });
 
     var buttons = [];
-    if (this.props.editData == null) {
+    if (this.props.dataElement == null) {
       buttons.push(
         <Button key="create" bsStyle="primary" onClick={this.handleCreate}>
           {this.props.strings.add_label_short}
@@ -272,8 +272,8 @@ const MyAddModal = React.createClass({
     var schema = this.props.schema;
     var strings = this.props.strings;
     var urls = this.props.urls;
-    var show = this.props.editData ? true : this.state.showModal;
-    var title = this.props.editData ? strings.edit_label : strings.add_label;
+    var show = this.props.dataElement ? true : this.state.showModal;
+    var title = this.props.dataElement ? strings.edit_label : strings.add_label;
     return (
       <div>
         <Button bsStyle="primary" bsSize="large" onClick={this.open}>
@@ -290,7 +290,7 @@ const MyAddModal = React.createClass({
                        urls={urls}
                        handleClose={this.handleClose}
                        handleEdit={this.props.handleEdit}
-                       editData={this.props.editData}
+                       dataElement={this.props.dataElement}
             />
           </Modal.Body>
         </Modal>
@@ -302,13 +302,13 @@ const MyAddModal = React.createClass({
 const MyCRUDPage = React.createClass({
   getInitialState() {
     return {
-      data: this.props.data,
-      editData: null
+      dataList: [],
+      dataElement: null
     };
   },
 
   handleUpdate() {
-    this.setState({editData: null});
+    this.setState({dataElement: null});
 
     fetch(this.props.schema[this.props.model].urls.api_root, {
       credentials: 'include',
@@ -318,8 +318,8 @@ const MyCRUDPage = React.createClass({
     })
     .then((response) => {
       if (response.ok) {
-        response.json().then((data) => {
-          this.setState({data: data});
+        response.json().then((dataList) => {
+          this.setState({dataList: dataList});
         })
       }
     })
@@ -329,7 +329,7 @@ const MyCRUDPage = React.createClass({
   },
 
   handleEdit(d) {
-    this.setState({editData: d});
+    this.setState({dataElement: d});
   },
 
   componentDidMount: function() {
@@ -342,12 +342,12 @@ const MyCRUDPage = React.createClass({
       <div>
         <PageHeader>{schema.strings.page_header}</PageHeader>
         <MyTable schema={schema.fields}
-                 data={this.state.data}
+                 dataList={this.state.dataList}
                  handleEdit={this.handleEdit}/>
         <MyAddModal schema={schema.fields}
                     strings={schema.strings}
                     urls={schema.urls}
-                    editData={this.state.editData}
+                    dataElement={this.state.dataElement}
                     handleUpdate={this.handleUpdate}
                     handleEdit={this.handleEdit}/>
       </div>
