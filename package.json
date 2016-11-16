@@ -15,6 +15,7 @@
     "bootstrap": "^3.3.7",
     "classnames": "^2.2.5",
     "css-loader": "^0.25.0",
+    "immutability-helper": "^2.0.0",
     "node-sass": "^3.10.1",
     "postcss-loader": "^1.0.0",
     "react": "^15.3.2",

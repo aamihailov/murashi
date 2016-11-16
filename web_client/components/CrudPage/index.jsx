@@ -3,6 +3,8 @@ import { PageHeader, Table } from 'react-bootstrap'
 import { Form, FormGroup, Col, FormControl, Button, ButtonToolbar, ControlLabel } from 'react-bootstrap'
 import { Modal, Popover } from 'react-bootstrap'
 import cookie from 'react-cookie';
+import update from 'immutability-helper';
+
 var Format = require('string-format')
 
 var MyTableHeader = React.createClass({
@@ -269,9 +271,7 @@ const MyAddModal = React.createClass({
   },
 
   render() {
-    var schema = this.props.schema;
-    var strings = this.props.strings;
-    var urls = this.props.urls;
+    var {schema, strings, urls} = this.props;
     var show = this.props.dataElement ? true : this.state.showModal;
     var title = this.props.dataElement ? strings.edit_label : strings.add_label;
     return (
@@ -301,16 +301,21 @@ const MyAddModal = React.createClass({
 
 const MyCRUDPage = React.createClass({
   getInitialState() {
+    var {model} = this.props;
     return {
-      dataList: [],
-      dataElement: null
+      [model]: {
+        dataList: [],
+        dataElement: null
+      }
     };
   },
 
   handleUpdate() {
-    this.setState({dataElement: null});
+    var {model} = this.props;
+    var schema = this.props.schema[model];
+    this.setState({[model]: update(this.state[model], {dataElement: {$set: null}})});
 
-    fetch(this.props.schema[this.props.model].urls.api_root, {
+    fetch(schema.urls.api_root, {
       credentials: 'include',
       headers: {
         'X-CSRFToken': cookie.load('csrftoken')
@@ -319,7 +324,7 @@ const MyCRUDPage = React.createClass({
     .then((response) => {
       if (response.ok) {
         response.json().then((dataList) => {
-          this.setState({dataList: dataList});
+          this.setState({[model]: update(this.state[model], {dataList: {$set: dataList}})});
         })
       }
     })
@@ -329,7 +334,8 @@ const MyCRUDPage = React.createClass({
   },
 
   handleEdit(d) {
-    this.setState({dataElement: d});
+    var {model} = this.props;
+    this.setState({[model]: update(this.state[model], {dataElement: {$set: d}})});
   },
 
   componentDidMount: function() {
@@ -337,17 +343,18 @@ const MyCRUDPage = React.createClass({
   },
 
   render(){
-    var schema = this.props.schema[this.props.model];
+    var {model} = this.props;
+    var schema = this.props.schema[model];
     return(
       <div>
         <PageHeader>{schema.strings.page_header}</PageHeader>
         <MyTable schema={schema.fields}
-                 dataList={this.state.dataList}
+                 dataList={this.state[model].dataList}
                  handleEdit={this.handleEdit}/>
         <MyAddModal schema={schema.fields}
                     strings={schema.strings}
                     urls={schema.urls}
-                    dataElement={this.state.dataElement}
+                    dataElement={this.state[model].dataElement}
                     handleUpdate={this.handleUpdate}
                     handleEdit={this.handleEdit}/>
       </div>

@@ -46646,6 +46646,10 @@
 	  value: true
 	});
 
+	var _defineProperty2 = __webpack_require__(518);
+
+	var _defineProperty3 = _interopRequireDefault(_defineProperty2);
+
 	var _stringify = __webpack_require__(504);
 
 	var _stringify2 = _interopRequireDefault(_stringify);
@@ -46659,6 +46663,10 @@
 	var _reactCookie = __webpack_require__(506);
 
 	var _reactCookie2 = _interopRequireDefault(_reactCookie);
+
+	var _immutabilityHelper = __webpack_require__(517);
+
+	var _immutabilityHelper2 = _interopRequireDefault(_immutabilityHelper);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -46968,9 +46976,11 @@
 	    this.setState({ showModal: true });
 	  },
 	  render: function render() {
-	    var schema = this.props.schema;
-	    var strings = this.props.strings;
-	    var urls = this.props.urls;
+	    var _props = this.props,
+	        schema = _props.schema,
+	        strings = _props.strings,
+	        urls = _props.urls;
+
 	    var show = this.props.dataElement ? true : this.state.showModal;
 	    var title = this.props.dataElement ? strings.edit_label : strings.add_label;
 	    return _react2.default.createElement(
@@ -47012,17 +47022,22 @@
 	var MyCRUDPage = _react2.default.createClass({
 	  displayName: 'MyCRUDPage',
 	  getInitialState: function getInitialState() {
-	    return {
+	    var model = this.props.model;
+
+	    return (0, _defineProperty3.default)({}, model, {
 	      dataList: [],
 	      dataElement: null
-	    };
+	    });
 	  },
 	  handleUpdate: function handleUpdate() {
 	    var _this4 = this;
 
-	    this.setState({ dataElement: null });
+	    var model = this.props.model;
 
-	    fetch(this.props.schema[this.props.model].urls.api_root, {
+	    var schema = this.props.schema[model];
+	    this.setState((0, _defineProperty3.default)({}, model, (0, _immutabilityHelper2.default)(this.state[model], { dataElement: { $set: null } })));
+
+	    fetch(schema.urls.api_root, {
 	      credentials: 'include',
 	      headers: {
 	        'X-CSRFToken': _reactCookie2.default.load('csrftoken')
@@ -47030,7 +47045,7 @@
 	    }).then(function (response) {
 	      if (response.ok) {
 	        response.json().then(function (dataList) {
-	          _this4.setState({ dataList: dataList });
+	          _this4.setState((0, _defineProperty3.default)({}, model, (0, _immutabilityHelper2.default)(_this4.state[model], { dataList: { $set: dataList } })));
 	        });
 	      }
 	    }).catch(function (error) {
@@ -47038,7 +47053,9 @@
 	    });
 	  },
 	  handleEdit: function handleEdit(d) {
-	    this.setState({ dataElement: d });
+	    var model = this.props.model;
+
+	    this.setState((0, _defineProperty3.default)({}, model, (0, _immutabilityHelper2.default)(this.state[model], { dataElement: { $set: d } })));
 	  },
 
 
@@ -47047,7 +47064,9 @@
 	  },
 
 	  render: function render() {
-	    var schema = this.props.schema[this.props.model];
+	    var model = this.props.model;
+
+	    var schema = this.props.schema[model];
 	    return _react2.default.createElement(
 	      'div',
 	      null,
@@ -47057,12 +47076,12 @@
 	        schema.strings.page_header
 	      ),
 	      _react2.default.createElement(MyTable, { schema: schema.fields,
-	        dataList: this.state.dataList,
+	        dataList: this.state[model].dataList,
 	        handleEdit: this.handleEdit }),
 	      _react2.default.createElement(MyAddModal, { schema: schema.fields,
 	        strings: schema.strings,
 	        urls: schema.urls,
-	        dataElement: this.state.dataElement,
+	        dataElement: this.state[model].dataElement,
 	        handleUpdate: this.handleUpdate,
 	        handleEdit: this.handleEdit })
 	    );
@@ -47825,6 +47844,210 @@
 
 	// exports
 
+
+/***/ },
+/* 517 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var invariant = __webpack_require__(268);
+
+	var hasOwnProperty = Object.prototype.hasOwnProperty;
+	var splice = Array.prototype.splice;
+
+	function assign(target, source) {
+	  for (var key in source) {
+	    if (hasOwnProperty.call(source, key)) {
+	      target[key] = source[key];
+	    }
+	  }
+	  return target;
+	}
+
+	function copy(object) {
+	  if (object instanceof Array) {
+	    return object.slice();
+	  } else if (object && typeof object === 'object') {
+	    return assign(new object.constructor(), object);
+	  } else {
+	    return object;
+	  }
+	}
+
+
+	function newContext() {
+	  var commands = assign({}, defaultCommands);
+	  update.extend = function(directive, fn) {
+	    commands[directive] = fn;
+	  }
+
+	  return update;
+
+	  function update(object, spec) {
+	    invariant(
+	      typeof spec === 'object',
+	      'update(): You provided a key path to update() that did not contain one ' +
+	      'of %s. Did you forget to include {%s: ...}?',
+	      Object.keys(commands).join(', '),
+	      '$set'
+	    );
+
+	    var newObject = object;
+	    for (var key in spec) {
+	      if (hasOwnProperty.call(commands, key)) {
+	        return commands[key](spec[key], newObject, spec, object);
+	      }
+	    }
+	    for (var key in spec) {
+	      var nextValueForKey = update(object[key], spec[key]);
+	      if (nextValueForKey === object[key]) {
+	        continue;
+	      }
+	      if (newObject === object) {
+	        newObject = copy(object);
+	      }
+	      newObject[key] = nextValueForKey;
+	    }
+	    return newObject;
+	  }
+
+	}
+
+	var defaultCommands = {
+	  $push: function(value, original, spec) {
+	    invariantPushAndUnshift(original, spec, '$push');
+	    return original.concat(value);
+	  },
+	  $unshift: function(value, original, spec) {
+	    invariantPushAndUnshift(original, spec, '$unshift');
+	    return value.concat(original);
+	  },
+	  $splice: function(value, newObject, spec, object) {
+	    var originalValue = newObject === object ? copy(object) : newObject;
+	    invariantSplices(originalValue, spec);
+	    value.forEach(function(args) {
+	      invariantSplice(args);
+	      splice.apply(originalValue, args);
+	    });
+	    return originalValue;
+	  },
+	  $set: function(value, original, spec) {
+	    invariantSet(spec);
+	    return value;
+	  },
+	  $merge: function(value, newObject, spec, object) {
+	    var originalValue = newObject === object ? copy(object) : newObject;
+	    invariantMerge(originalValue, value);
+	    Object.keys(value).forEach(function(key) {
+	      originalValue[key] = value[key];
+	    });
+	    return originalValue;
+	  },
+	  $apply: function(value, original) {
+	    invariantApply(value);
+	    return value(original);
+	  }
+	};
+
+
+
+	module.exports = newContext();
+	module.exports.newContext = newContext;
+
+
+	// invariants
+
+	function invariantPushAndUnshift(value, spec, command) {
+	  invariant(
+	    Array.isArray(value),
+	    'update(): expected target of %s to be an array; got %s.',
+	    command,
+	    value
+	  );
+	  var specValue = spec[command];
+	  invariant(
+	    Array.isArray(specValue),
+	    'update(): expected spec of %s to be an array; got %s. ' +
+	    'Did you forget to wrap your parameter in an array?',
+	    command,
+	    specValue
+	  );
+	}
+
+	function invariantSplices(value, spec) {
+	  invariant(
+	    Array.isArray(value),
+	    'Expected $splice target to be an array; got %s',
+	    value
+	  );
+	  invariantSplice(spec['$splice']);
+	}
+
+	function invariantSplice(value) {
+	  invariant(
+	    Array.isArray(value),
+	    'update(): expected spec of $splice to be an array of arrays; got %s. ' +
+	    'Did you forget to wrap your parameters in an array?',
+	    value
+	  );
+	}
+
+	function invariantApply(fn) {
+	  invariant(
+	    typeof fn === 'function',
+	    'update(): expected spec of $apply to be a function; got %s.',
+	    fn
+	  );
+	}
+
+	function invariantSet(spec) {
+	  invariant(
+	    Object.keys(spec).length === 1,
+	    'Cannot have more than one key in an object with $set'
+	  );
+	}
+
+	function invariantMerge(target, specValue) {
+	  invariant(
+	    specValue && typeof specValue === 'object',
+	    'update(): $merge expects a spec of type \'object\'; got %s',
+	    specValue
+	  );
+	  invariant(
+	    target && typeof target === 'object',
+	    'update(): $merge expects a target of type \'object\'; got %s',
+	    target
+	  );
+	}
+
+
+/***/ },
+/* 518 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	exports.__esModule = true;
+
+	var _defineProperty = __webpack_require__(202);
+
+	var _defineProperty2 = _interopRequireDefault(_defineProperty);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.default = function (obj, key, value) {
+	  if (key in obj) {
+	    (0, _defineProperty2.default)(obj, key, {
+	      value: value,
+	      enumerable: true,
+	      configurable: true,
+	      writable: true
+	    });
+	  } else {
+	    obj[key] = value;
+	  }
+
+	  return obj;
+	};
 
 /***/ }
 /******/ ]);
