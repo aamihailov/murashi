@@ -21,7 +21,7 @@ var SCHEMA = {
     }
   },
 
-  trainTypes: {
+  traintypes: {
     fields: [
       {id: "id", name: "#", readonly: true},
       {id: "name", name: "Название"},
@@ -36,8 +36,8 @@ var SCHEMA = {
       delete_label_short: "Удалить"
     },
     urls: {
-      api_root: "http://localhost:5000/api/v0/train-types/?format=json",
-      api_element: "http://localhost:5000/api/v0/train-types/{0}/?format=json"
+      api_root: "http://localhost:5000/api/v0/traintypes/?format=json",
+      api_element: "http://localhost:5000/api/v0/traintypes/{0}/?format=json"
     }
   },
 
@@ -88,8 +88,8 @@ var SCHEMA = {
     fields: [
       {id: "id", name: "#", readonly: true},
       {id: "name", name: "Название"},
-      {id: "trainType", name: "Направление тренировок", type: "ref", ref: "trainType"},
-      {id: "trainer", name: "Тренер", type: "ref", ref: "trainer"},
+      {id: "traintype", name: "Направление тренировок", type: "ref", ref: "traintypes"},
+      {id: "trainer", name: "Тренер", type: "ref", ref: "trainers"},
       {id: "duration", name: "Продолжительность"},
       {id: "note", name: "Примечание", type: "textarea"}
     ],

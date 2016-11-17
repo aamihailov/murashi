@@ -20,7 +20,7 @@ class Navigation extends Component {
           <NavDropdown title="Тренировки" id="nav-dropdown">
             <MenuItem eventKey="/trainer" href="/trainer">Тренеры</MenuItem>
             <MenuItem eventKey="/group" href="/group">Группы</MenuItem>
-            <MenuItem eventKey="/train-type" href="/train-type">Направления</MenuItem>
+            <MenuItem eventKey="/traintype" href="/traintype">Направления</MenuItem>
             <MenuItem eventKey="/subscription" href="/subscription">Абонементы</MenuItem>
             <MenuItem eventKey="/location" href="/location">Залы</MenuItem>
           </NavDropdown>

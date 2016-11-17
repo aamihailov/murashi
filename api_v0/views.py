@@ -29,12 +29,12 @@ class TrainerViewSet(viewsets.ModelViewSet):
         serializer.save(owner=self.request.user)
 
 
-class TrainTypeViewSet(viewsets.ModelViewSet):
-    serializer_class = TrainTypeSerializer
+class TraintypeViewSet(viewsets.ModelViewSet):
+    serializer_class = TraintypeSerializer
     permission_classes = (permissions.IsAuthenticated, IsOwner)
 
     def get_queryset(self):
-        return self.request.user.own_train_types.all()
+        return self.request.user.own_traintypes.all()
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)

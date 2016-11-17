@@ -56,7 +56,7 @@
 
 	var _components = __webpack_require__(172);
 
-	__webpack_require__(515);
+	__webpack_require__(517);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -21534,23 +21534,23 @@
 
 	var _ClientsPage2 = _interopRequireDefault(_ClientsPage);
 
-	var _TrainersPage = __webpack_require__(510);
+	var _TrainersPage = __webpack_require__(512);
 
 	var _TrainersPage2 = _interopRequireDefault(_TrainersPage);
 
-	var _TrainTypesPage = __webpack_require__(511);
+	var _TrainTypesPage = __webpack_require__(513);
 
 	var _TrainTypesPage2 = _interopRequireDefault(_TrainTypesPage);
 
-	var _LocationsPage = __webpack_require__(512);
+	var _LocationsPage = __webpack_require__(514);
 
 	var _LocationsPage2 = _interopRequireDefault(_LocationsPage);
 
-	var _SubscriptionsPage = __webpack_require__(513);
+	var _SubscriptionsPage = __webpack_require__(515);
 
 	var _SubscriptionsPage2 = _interopRequireDefault(_SubscriptionsPage);
 
-	var _GroupsPage = __webpack_require__(514);
+	var _GroupsPage = __webpack_require__(516);
 
 	var _GroupsPage2 = _interopRequireDefault(_GroupsPage);
 
@@ -21578,7 +21578,7 @@
 	          _react2.default.createElement(_reactRouter.Route, { path: 'client', component: _ClientsPage2.default }),
 	          _react2.default.createElement(_reactRouter.Route, { path: 'trainer', component: _TrainersPage2.default }),
 	          _react2.default.createElement(_reactRouter.Route, { path: 'group', component: _GroupsPage2.default }),
-	          _react2.default.createElement(_reactRouter.Route, { path: 'train-type', component: _TrainTypesPage2.default }),
+	          _react2.default.createElement(_reactRouter.Route, { path: 'traintype', component: _TrainTypesPage2.default }),
 	          _react2.default.createElement(_reactRouter.Route, { path: 'subscription', component: _SubscriptionsPage2.default }),
 	          _react2.default.createElement(_reactRouter.Route, { path: 'location', component: _LocationsPage2.default }),
 	          _react2.default.createElement(_reactRouter.Route, { path: 'salary-plan', component: _EmptyPage2.default }),
@@ -28931,7 +28931,7 @@
 	            ),
 	            _react2.default.createElement(
 	              _reactBootstrap.MenuItem,
-	              { eventKey: '/train-type', href: '/train-type' },
+	              { eventKey: '/traintype', href: '/traintype' },
 	              '\u041D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F'
 	            ),
 	            _react2.default.createElement(
@@ -46621,7 +46621,7 @@
 
 	var _CrudPage2 = _interopRequireDefault(_CrudPage);
 
-	var _schema = __webpack_require__(509);
+	var _schema = __webpack_require__(511);
 
 	var _schema2 = _interopRequireDefault(_schema);
 
@@ -46646,11 +46646,11 @@
 	  value: true
 	});
 
-	var _defineProperty2 = __webpack_require__(518);
+	var _defineProperty2 = __webpack_require__(504);
 
 	var _defineProperty3 = _interopRequireDefault(_defineProperty2);
 
-	var _stringify = __webpack_require__(504);
+	var _stringify = __webpack_require__(505);
 
 	var _stringify2 = _interopRequireDefault(_stringify);
 
@@ -46660,25 +46660,23 @@
 
 	var _reactBootstrap = __webpack_require__(325);
 
-	var _reactCookie = __webpack_require__(506);
+	var _reactCookie = __webpack_require__(507);
 
 	var _reactCookie2 = _interopRequireDefault(_reactCookie);
 
-	var _immutabilityHelper = __webpack_require__(517);
+	var _immutabilityHelper = __webpack_require__(509);
 
 	var _immutabilityHelper2 = _interopRequireDefault(_immutabilityHelper);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var Format = __webpack_require__(508);
+	var Format = __webpack_require__(510);
 
 	var MyTableHeader = _react2.default.createClass({
 	  displayName: 'MyTableHeader',
 	  render: function render() {
 	    var cols = [];
-	    var schema = this.props.schema;
-
-	    schema.forEach(function (el) {
+	    this.props.schema.forEach(function (el) {
 	      cols.push(_react2.default.createElement(
 	        'th',
 	        { key: el.id },
@@ -46701,18 +46699,34 @@
 	var MyTableRow = _react2.default.createClass({
 	  displayName: 'MyTableRow',
 	  handleEdit: function handleEdit(e) {
-	    this.props.handleEdit(this.props.rowData);
+	    var _props = this.props,
+	        handleEdit = _props.handleEdit,
+	        rowData = _props.rowData;
+
+	    handleEdit(rowData);
 	  },
 	  render: function render() {
 	    var cols = [];
-	    var schema = this.props.schema;
-	    var rowData = this.props.rowData;
+	    var _props2 = this.props,
+	        schema = _props2.schema,
+	        data = _props2.data,
+	        rowData = _props2.rowData;
+
 
 	    schema.forEach(function (el) {
+	      var v = '[' + rowData[el.id] + '...]';
+	      if (el.type != 'ref') {
+	        v = rowData[el.id];
+	      } else if (data[el.ref].loaded) {
+	        var ref = data[el.ref].dataList[rowData[el.id]];
+	        if (ref) {
+	          v = ref.name;
+	        }
+	      }
 	      cols.push(_react2.default.createElement(
 	        'td',
 	        { key: el.id },
-	        rowData[el.id]
+	        v
 	      ));
 	    });
 
@@ -46728,18 +46742,20 @@
 	  displayName: 'MyTable',
 	  render: function render() {
 	    var rows = [];
-	    var schema = this.props.schema;
-	    var dataList = this.props.dataList;
+	    var _props3 = this.props,
+	        schema = _props3.schema,
+	        model = _props3.model,
+	        data = _props3.data,
+	        handleEdit = _props3.handleEdit;
 
-	    var handleEdit = this.props.handleEdit;
-	    dataList.forEach(function (el) {
-	      rows.push(_react2.default.createElement(MyTableRow, { key: el.id, schema: schema, rowData: el, handleEdit: handleEdit }));
+	    data[model].dataList.forEach(function (el) {
+	      rows.push(_react2.default.createElement(MyTableRow, { data: data, key: el.id, schema: schema[model].fields, rowData: el, handleEdit: handleEdit }));
 	    });
 
 	    return _react2.default.createElement(
 	      _reactBootstrap.Table,
 	      { striped: true, bordered: true, hover: true },
-	      _react2.default.createElement(MyTableHeader, { schema: schema }),
+	      _react2.default.createElement(MyTableHeader, { schema: schema[model].fields }),
 	      _react2.default.createElement(
 	        'tbody',
 	        null,
@@ -46755,24 +46771,32 @@
 	    return { formOptions: [] };
 	  },
 	  render: function render() {
+	    var _props4 = this.props,
+	        name = _props4.name,
+	        value = _props4.value,
+	        type = _props4.type,
+	        id = _props4.id,
+	        wrong = _props4.wrong;
+
+
 	    var control;
 	    var formOptions;
 
 	    var validationState;
 	    var errorList;
-	    if (this.props.wrong) {
-	      console.log(this.props.wrong);
+	    if (wrong) {
+	      console.log(wrong);
 	      validationState = "error";
 	      errorList = _react2.default.createElement(
 	        'div',
 	        null,
-	        this.props.wrong
+	        wrong
 	      );
 	    }
 
-	    switch (this.props.type) {
+	    switch (type) {
 	      case 'textarea':
-	        control = _react2.default.createElement(_reactBootstrap.FormControl, { componentClass: 'textarea', placeholder: this.props.name, value: this.props.value });
+	        control = _react2.default.createElement(_reactBootstrap.FormControl, { componentClass: 'textarea', placeholder: name, value: value });
 	        break;
 	      case 'select':
 	        var formOptions = [];
@@ -46790,22 +46814,22 @@
 	        });
 	        control = _react2.default.createElement(
 	          _reactBootstrap.FormControl,
-	          { componentClass: 'select', placeholder: this.props.name },
+	          { componentClass: 'select', placeholder: name },
 	          formOptions
 	        );
 	        break;
 	      default:
-	        control = _react2.default.createElement(_reactBootstrap.FormControl, { type: 'text', placeholder: this.props.name, value: this.props.value });
+	        control = _react2.default.createElement(_reactBootstrap.FormControl, { type: 'text', placeholder: name, value: value });
 	        break;
 	    }
 
 	    return _react2.default.createElement(
 	      _reactBootstrap.FormGroup,
-	      { validationState: validationState, controlId: this.props.id },
+	      { validationState: validationState, controlId: id },
 	      _react2.default.createElement(
 	        _reactBootstrap.Col,
 	        { componentClass: _reactBootstrap.ControlLabel, sm: 2 },
-	        this.props.name
+	        name
 	      ),
 	      _react2.default.createElement(
 	        _reactBootstrap.Col,
@@ -46976,13 +47000,17 @@
 	    this.setState({ showModal: true });
 	  },
 	  render: function render() {
-	    var _props = this.props,
-	        schema = _props.schema,
-	        strings = _props.strings,
-	        urls = _props.urls;
+	    var _props5 = this.props,
+	        model = _props5.model,
+	        handleEdit = _props5.handleEdit;
+	    var _props$schema$model = this.props.schema[model],
+	        fields = _props$schema$model.fields,
+	        strings = _props$schema$model.strings,
+	        urls = _props$schema$model.urls;
+	    var dataElement = this.props.data[model].dataElement;
 
-	    var show = this.props.dataElement ? true : this.state.showModal;
-	    var title = this.props.dataElement ? strings.edit_label : strings.add_label;
+	    var show = dataElement ? true : this.state.showModal;
+	    var title = dataElement ? strings.edit_label : strings.add_label;
 	    return _react2.default.createElement(
 	      'div',
 	      null,
@@ -47006,12 +47034,12 @@
 	        _react2.default.createElement(
 	          _reactBootstrap.Modal.Body,
 	          null,
-	          _react2.default.createElement(MyAddForm, { schema: schema,
+	          _react2.default.createElement(MyAddForm, { schema: fields,
 	            strings: strings,
 	            urls: urls,
 	            handleClose: this.handleClose,
-	            handleEdit: this.props.handleEdit,
-	            dataElement: this.props.dataElement
+	            handleEdit: handleEdit,
+	            dataElement: dataElement
 	          })
 	        )
 	      )
@@ -47022,34 +47050,49 @@
 	var MyCRUDPage = _react2.default.createClass({
 	  displayName: 'MyCRUDPage',
 	  getInitialState: function getInitialState() {
-	    var model = this.props.model;
-
-	    return (0, _defineProperty3.default)({}, model, {
-	      dataList: [],
-	      dataElement: null
-	    });
+	    var ans = {};
+	    for (var model in this.props.schema) {
+	      ans[model] = {
+	        loaded: false,
+	        dataList: [],
+	        dataElement: null
+	      };
+	    }
+	    return ans;
 	  },
 	  handleUpdate: function handleUpdate() {
 	    var _this4 = this;
 
-	    var model = this.props.model;
-
-	    var schema = this.props.schema[model];
-	    this.setState((0, _defineProperty3.default)({}, model, (0, _immutabilityHelper2.default)(this.state[model], { dataElement: { $set: null } })));
-
-	    fetch(schema.urls.api_root, {
-	      credentials: 'include',
-	      headers: {
-	        'X-CSRFToken': _reactCookie2.default.load('csrftoken')
+	    var models_to_update = [this.props.model];
+	    this.props.schema[this.props.model].fields.forEach(function (field) {
+	      if (field.type == 'ref') {
+	        models_to_update.push(field.ref);
 	      }
-	    }).then(function (response) {
-	      if (response.ok) {
-	        response.json().then(function (dataList) {
-	          _this4.setState((0, _defineProperty3.default)({}, model, (0, _immutabilityHelper2.default)(_this4.state[model], { dataList: { $set: dataList } })));
-	        });
-	      }
-	    }).catch(function (error) {
-	      console.error(error);
+	    });
+
+	    models_to_update.forEach(function (model) {
+	      var schema = _this4.props.schema[model];
+	      _this4.setState((0, _defineProperty3.default)({}, model, (0, _immutabilityHelper2.default)(_this4.state[model], { dataElement: { $set: null } })));
+	      fetch(schema.urls.api_root, {
+	        credentials: 'include',
+	        headers: {
+	          'X-CSRFToken': _reactCookie2.default.load('csrftoken')
+	        }
+	      }).then(function (response) {
+	        if (response.ok) {
+	          response.json().then(function (dataList) {
+	            var data = [];
+	            dataList.forEach(function (el) {
+	              data[el.id] = el;
+	            });
+	            _this4.setState((0, _defineProperty3.default)({}, model, (0, _immutabilityHelper2.default)(_this4.state[model], { dataList: { $set: data },
+	              loaded: { $set: true }
+	            })));
+	          });
+	        }
+	      }).catch(function (error) {
+	        console.error(error);
+	      });
 	    });
 	  },
 	  handleEdit: function handleEdit(d) {
@@ -47064,24 +47107,25 @@
 	  },
 
 	  render: function render() {
-	    var model = this.props.model;
+	    var _props6 = this.props,
+	        model = _props6.model,
+	        schema = _props6.schema;
 
-	    var schema = this.props.schema[model];
 	    return _react2.default.createElement(
 	      'div',
 	      null,
 	      _react2.default.createElement(
 	        _reactBootstrap.PageHeader,
 	        null,
-	        schema.strings.page_header
+	        schema[model].strings.page_header
 	      ),
-	      _react2.default.createElement(MyTable, { schema: schema.fields,
-	        dataList: this.state[model].dataList,
+	      _react2.default.createElement(MyTable, { model: model,
+	        schema: schema,
+	        data: this.state,
 	        handleEdit: this.handleEdit }),
-	      _react2.default.createElement(MyAddModal, { schema: schema.fields,
-	        strings: schema.strings,
-	        urls: schema.urls,
-	        dataElement: this.state[model].dataElement,
+	      _react2.default.createElement(MyAddModal, { model: model,
+	        schema: schema,
+	        data: this.state,
 	        handleUpdate: this.handleUpdate,
 	        handleEdit: this.handleEdit })
 	    );
@@ -47094,10 +47138,39 @@
 /* 504 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = { "default": __webpack_require__(505), __esModule: true };
+	"use strict";
+
+	exports.__esModule = true;
+
+	var _defineProperty = __webpack_require__(202);
+
+	var _defineProperty2 = _interopRequireDefault(_defineProperty);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.default = function (obj, key, value) {
+	  if (key in obj) {
+	    (0, _defineProperty2.default)(obj, key, {
+	      value: value,
+	      enumerable: true,
+	      configurable: true,
+	      writable: true
+	    });
+	  } else {
+	    obj[key] = value;
+	  }
+
+	  return obj;
+	};
 
 /***/ },
 /* 505 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = { "default": __webpack_require__(506), __esModule: true };
+
+/***/ },
+/* 506 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var core  = __webpack_require__(187)
@@ -47107,10 +47180,10 @@
 	};
 
 /***/ },
-/* 506 */
+/* 507 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var cookie = __webpack_require__(507);
+	var cookie = __webpack_require__(508);
 
 	if (typeof Object.assign != 'function') {
 	  Object.assign = function(target) {
@@ -47260,7 +47333,7 @@
 
 
 /***/ },
-/* 507 */
+/* 508 */
 /***/ function(module, exports) {
 
 	/*!
@@ -47422,431 +47495,7 @@
 
 
 /***/ },
-/* 508 */
-/***/ function(module, exports, __webpack_require__) {
-
-	// Generated by CoffeeScript 1.8.0
-	(function() {
-	  var ValueError, create, explicitToImplicit, format, implicitToExplicit, lookup, resolve,
-	    __hasProp = {}.hasOwnProperty,
-	    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	    __slice = [].slice;
-
-	  ValueError = (function(_super) {
-	    __extends(ValueError, _super);
-
-	    function ValueError(message) {
-	      this.message = message;
-	    }
-
-	    ValueError.prototype.name = 'ValueError';
-
-	    return ValueError;
-
-	  })(Error);
-
-	  implicitToExplicit = 'cannot switch from implicit to explicit numbering';
-
-	  explicitToImplicit = 'cannot switch from explicit to implicit numbering';
-
-	  create = function(transformers) {
-	    if (transformers == null) {
-	      transformers = {};
-	    }
-	    return function() {
-	      var args, explicit, idx, implicit, message, template;
-	      template = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
-	      idx = 0;
-	      explicit = implicit = false;
-	      message = 'cannot switch from {} to {} numbering';
-	      return template.replace(/([{}])\1|[{](.*?)(?:!(.+?))?[}]/g, function(match, literal, key, transformer) {
-	        var value, _ref, _ref1;
-	        if (literal) {
-	          return literal;
-	        }
-	        if (key.length) {
-	          if (implicit) {
-	            throw new ValueError(implicitToExplicit);
-	          }
-	          explicit = true;
-	          value = (_ref = lookup(args, key)) != null ? _ref : '';
-	        } else {
-	          if (explicit) {
-	            throw new ValueError(explicitToImplicit);
-	          }
-	          implicit = true;
-	          value = (_ref1 = args[idx++]) != null ? _ref1 : '';
-	        }
-	        if (Object.prototype.hasOwnProperty.call(transformers, transformer)) {
-	          return transformers[transformer](value);
-	        } else {
-	          return value;
-	        }
-	      });
-	    };
-	  };
-
-	  lookup = function(object, key) {
-	    var match;
-	    if (!/^(\d+)([.]|$)/.test(key)) {
-	      key = '0.' + key;
-	    }
-	    while (match = /(.+?)[.](.+)/.exec(key)) {
-	      object = resolve(object, match[1]);
-	      key = match[2];
-	    }
-	    return resolve(object, key);
-	  };
-
-	  resolve = function(object, key) {
-	    var value;
-	    value = object[key];
-	    if (typeof value === 'function') {
-	      return value.call(object);
-	    } else {
-	      return value;
-	    }
-	  };
-
-	  format = create({});
-
-	  format.create = create;
-
-	  format.extend = function(prototype, transformers) {
-	    var $format;
-	    $format = create(transformers);
-	    prototype.format = function() {
-	      return $format.apply(null, [this].concat(__slice.call(arguments)));
-	    };
-	  };
-
-	  if (true) {
-	    module.exports = format;
-	  } else if (typeof define === 'function' && define.amd) {
-	    define(format);
-	  } else {
-	    window.format = format;
-	  }
-
-	}).call(this);
-
-
-/***/ },
 /* 509 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	var SCHEMA = {
-	  trainers: {
-	    fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Имя" }, { id: "phone", name: "Телефон" }, { id: "balance", name: "Баланс" }, { id: "note", name: "Примечание", type: "textarea" }],
-	    strings: {
-	      page_header: "Тренеры",
-	      add_label: "Добавить тренера",
-	      edit_label: "Редактировать тренера",
-	      add_label_short: "Добавить",
-	      update_label_short: "Обновить",
-	      delete_label_short: "Удалить"
-	    },
-	    urls: {
-	      api_root: "http://localhost:5000/api/v0/trainers/?format=json",
-	      api_element: "http://localhost:5000/api/v0/trainers/{0}/?format=json"
-	    }
-	  },
-
-	  trainTypes: {
-	    fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Название" }, { id: "note", name: "Примечание", type: "textarea" }],
-	    strings: {
-	      page_header: "Направления тренировок",
-	      add_label: "Добавить направление тренировок",
-	      edit_label: "Редактировать направление тренировок",
-	      add_label_short: "Добавить",
-	      update_label_short: "Обновить",
-	      delete_label_short: "Удалить"
-	    },
-	    urls: {
-	      api_root: "http://localhost:5000/api/v0/train-types/?format=json",
-	      api_element: "http://localhost:5000/api/v0/train-types/{0}/?format=json"
-	    }
-	  },
-
-	  subscriptions: {
-	    fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Название" }, { id: "visits", name: "Занятий" }, { id: "validDays", name: "Срок действия" }, { id: "price", name: "Стоимость" }, { id: "note", name: "Примечание", type: "textarea" }],
-	    strings: {
-	      page_header: "Абонементы",
-	      add_label: "Добавить абонемент",
-	      edit_label: "Редактировать абонемент",
-	      add_label_short: "Добавить",
-	      update_label_short: "Обновить",
-	      delete_label_short: "Удалить"
-	    },
-	    urls: {
-	      api_root: "http://localhost:5000/api/v0/subscriptions/?format=json",
-	      api_element: "http://localhost:5000/api/v0/subscriptions/{0}/?format=json"
-	    }
-	  },
-
-	  locations: {
-	    fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Название" }, { id: "note", name: "Примечание", type: "textarea" }],
-	    strings: {
-	      page_header: "Залы",
-	      add_label: "Добавить зал",
-	      edit_label: "Редактировать зал",
-	      add_label_short: "Добавить",
-	      update_label_short: "Обновить",
-	      delete_label_short: "Удалить"
-	    },
-	    urls: {
-	      api_root: "http://localhost:5000/api/v0/locations/?format=json",
-	      api_element: "http://localhost:5000/api/v0/locations/{0}/?format=json"
-	    }
-	  },
-
-	  groups: {
-	    fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Название" }, { id: "trainType", name: "Направление тренировок", type: "ref", ref: "trainType" }, { id: "trainer", name: "Тренер", type: "ref", ref: "trainer" }, { id: "duration", name: "Продолжительность" }, { id: "note", name: "Примечание", type: "textarea" }],
-	    strings: {
-	      page_header: "Группы",
-	      add_label: "Добавить группу",
-	      edit_label: "Редактировать группу",
-	      add_label_short: "Добавить",
-	      update_label_short: "Обновить",
-	      delete_label_short: "Удалить"
-	    },
-	    urls: {
-	      api_root: "http://localhost:5000/api/v0/groups/?format=json",
-	      api_element: "http://localhost:5000/api/v0/groups/{0}/?format=json"
-	    }
-	  },
-
-	  clients: {
-	    fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Имя" }, { id: "phone", name: "Телефон" }, { id: "balance", name: "Баланс" }, { id: "note", name: "Примечание", type: "textarea" }],
-	    strings: {
-	      page_header: "Клиенты",
-	      add_label: "Добавить клиента",
-	      edit_label: "Редактировать клиента",
-	      add_label_short: "Добавить",
-	      update_label_short: "Обновить",
-	      delete_label_short: "Удалить"
-	    },
-	    urls: {
-	      api_root: "http://localhost:5000/api/v0/clients/?format=json",
-	      api_element: "http://localhost:5000/api/v0/clients/{0}/?format=json"
-	    }
-	  }
-	};
-
-	exports.default = SCHEMA;
-
-/***/ },
-/* 510 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _CrudPage = __webpack_require__(503);
-
-	var _CrudPage2 = _interopRequireDefault(_CrudPage);
-
-	var _schema = __webpack_require__(509);
-
-	var _schema2 = _interopRequireDefault(_schema);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var Page = _react2.default.createClass({
-	  displayName: 'Page',
-	  render: function render() {
-	    return _react2.default.createElement(_CrudPage2.default, { model: 'trainers', schema: _schema2.default });
-	  }
-	});
-
-	exports.default = Page;
-
-/***/ },
-/* 511 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _CrudPage = __webpack_require__(503);
-
-	var _CrudPage2 = _interopRequireDefault(_CrudPage);
-
-	var _schema = __webpack_require__(509);
-
-	var _schema2 = _interopRequireDefault(_schema);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var Page = _react2.default.createClass({
-	  displayName: 'Page',
-	  render: function render() {
-	    return _react2.default.createElement(_CrudPage2.default, { model: 'trainTypes', schema: _schema2.default });
-	  }
-	});
-
-	exports.default = Page;
-
-/***/ },
-/* 512 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _CrudPage = __webpack_require__(503);
-
-	var _CrudPage2 = _interopRequireDefault(_CrudPage);
-
-	var _schema = __webpack_require__(509);
-
-	var _schema2 = _interopRequireDefault(_schema);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var Page = _react2.default.createClass({
-	  displayName: 'Page',
-	  render: function render() {
-	    return _react2.default.createElement(_CrudPage2.default, { model: 'locations', schema: _schema2.default });
-	  }
-	});
-
-	exports.default = Page;
-
-/***/ },
-/* 513 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _CrudPage = __webpack_require__(503);
-
-	var _CrudPage2 = _interopRequireDefault(_CrudPage);
-
-	var _schema = __webpack_require__(509);
-
-	var _schema2 = _interopRequireDefault(_schema);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var Page = _react2.default.createClass({
-	  displayName: 'Page',
-	  render: function render() {
-	    return _react2.default.createElement(_CrudPage2.default, { model: 'subscriptions', schema: _schema2.default });
-	  }
-	});
-
-	exports.default = Page;
-
-/***/ },
-/* 514 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _CrudPage = __webpack_require__(503);
-
-	var _CrudPage2 = _interopRequireDefault(_CrudPage);
-
-	var _schema = __webpack_require__(509);
-
-	var _schema2 = _interopRequireDefault(_schema);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var Page = _react2.default.createClass({
-	  displayName: 'Page',
-	  render: function render() {
-	    return _react2.default.createElement(_CrudPage2.default, { model: 'groups', schema: _schema2.default });
-	  }
-	});
-
-	exports.default = Page;
-
-/***/ },
-/* 515 */
-/***/ function(module, exports, __webpack_require__) {
-
-	// style-loader: Adds some css to the DOM by adding a <style> tag
-
-	// load the styles
-	var content = __webpack_require__(516);
-	if(typeof content === 'string') content = [[module.id, content, '']];
-	// add the styles to the DOM
-	var update = __webpack_require__(500)(content, {});
-	if(content.locals) module.exports = content.locals;
-	// Hot Module Replacement
-	if(false) {
-		// When the styles change, update the <style> tags
-		if(!content.locals) {
-			module.hot.accept("!!./../node_modules/css-loader/index.js!./../node_modules/postcss-loader/index.js!./../node_modules/sass-loader/index.js!./index.scss", function() {
-				var newContent = require("!!./../node_modules/css-loader/index.js!./../node_modules/postcss-loader/index.js!./../node_modules/sass-loader/index.js!./index.scss");
-				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-				update(newContent);
-			});
-		}
-		// When the module is disposed, remove the <style> tags
-		module.hot.dispose(function() { update(); });
-	}
-
-/***/ },
-/* 516 */
-/***/ function(module, exports, __webpack_require__) {
-
-	exports = module.exports = __webpack_require__(499)();
-	// imports
-
-
-	// module
-	exports.push([module.id, "body {\n  margin: 0;\n  padding: 0;\n  font-family: sans-serif; }\n", ""]);
-
-	// exports
-
-
-/***/ },
-/* 517 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var invariant = __webpack_require__(268);
@@ -48021,33 +47670,428 @@
 
 
 /***/ },
-/* 518 */
+/* 510 */
 /***/ function(module, exports, __webpack_require__) {
+
+	// Generated by CoffeeScript 1.8.0
+	(function() {
+	  var ValueError, create, explicitToImplicit, format, implicitToExplicit, lookup, resolve,
+	    __hasProp = {}.hasOwnProperty,
+	    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+	    __slice = [].slice;
+
+	  ValueError = (function(_super) {
+	    __extends(ValueError, _super);
+
+	    function ValueError(message) {
+	      this.message = message;
+	    }
+
+	    ValueError.prototype.name = 'ValueError';
+
+	    return ValueError;
+
+	  })(Error);
+
+	  implicitToExplicit = 'cannot switch from implicit to explicit numbering';
+
+	  explicitToImplicit = 'cannot switch from explicit to implicit numbering';
+
+	  create = function(transformers) {
+	    if (transformers == null) {
+	      transformers = {};
+	    }
+	    return function() {
+	      var args, explicit, idx, implicit, message, template;
+	      template = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
+	      idx = 0;
+	      explicit = implicit = false;
+	      message = 'cannot switch from {} to {} numbering';
+	      return template.replace(/([{}])\1|[{](.*?)(?:!(.+?))?[}]/g, function(match, literal, key, transformer) {
+	        var value, _ref, _ref1;
+	        if (literal) {
+	          return literal;
+	        }
+	        if (key.length) {
+	          if (implicit) {
+	            throw new ValueError(implicitToExplicit);
+	          }
+	          explicit = true;
+	          value = (_ref = lookup(args, key)) != null ? _ref : '';
+	        } else {
+	          if (explicit) {
+	            throw new ValueError(explicitToImplicit);
+	          }
+	          implicit = true;
+	          value = (_ref1 = args[idx++]) != null ? _ref1 : '';
+	        }
+	        if (Object.prototype.hasOwnProperty.call(transformers, transformer)) {
+	          return transformers[transformer](value);
+	        } else {
+	          return value;
+	        }
+	      });
+	    };
+	  };
+
+	  lookup = function(object, key) {
+	    var match;
+	    if (!/^(\d+)([.]|$)/.test(key)) {
+	      key = '0.' + key;
+	    }
+	    while (match = /(.+?)[.](.+)/.exec(key)) {
+	      object = resolve(object, match[1]);
+	      key = match[2];
+	    }
+	    return resolve(object, key);
+	  };
+
+	  resolve = function(object, key) {
+	    var value;
+	    value = object[key];
+	    if (typeof value === 'function') {
+	      return value.call(object);
+	    } else {
+	      return value;
+	    }
+	  };
+
+	  format = create({});
+
+	  format.create = create;
+
+	  format.extend = function(prototype, transformers) {
+	    var $format;
+	    $format = create(transformers);
+	    prototype.format = function() {
+	      return $format.apply(null, [this].concat(__slice.call(arguments)));
+	    };
+	  };
+
+	  if (true) {
+	    module.exports = format;
+	  } else if (typeof define === 'function' && define.amd) {
+	    define(format);
+	  } else {
+	    window.format = format;
+	  }
+
+	}).call(this);
+
+
+/***/ },
+/* 511 */
+/***/ function(module, exports) {
 
 	"use strict";
 
-	exports.__esModule = true;
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var SCHEMA = {
+	  trainers: {
+	    fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Имя" }, { id: "phone", name: "Телефон" }, { id: "balance", name: "Баланс" }, { id: "note", name: "Примечание", type: "textarea" }],
+	    strings: {
+	      page_header: "Тренеры",
+	      add_label: "Добавить тренера",
+	      edit_label: "Редактировать тренера",
+	      add_label_short: "Добавить",
+	      update_label_short: "Обновить",
+	      delete_label_short: "Удалить"
+	    },
+	    urls: {
+	      api_root: "http://localhost:5000/api/v0/trainers/?format=json",
+	      api_element: "http://localhost:5000/api/v0/trainers/{0}/?format=json"
+	    }
+	  },
 
-	var _defineProperty = __webpack_require__(202);
+	  traintypes: {
+	    fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Название" }, { id: "note", name: "Примечание", type: "textarea" }],
+	    strings: {
+	      page_header: "Направления тренировок",
+	      add_label: "Добавить направление тренировок",
+	      edit_label: "Редактировать направление тренировок",
+	      add_label_short: "Добавить",
+	      update_label_short: "Обновить",
+	      delete_label_short: "Удалить"
+	    },
+	    urls: {
+	      api_root: "http://localhost:5000/api/v0/traintypes/?format=json",
+	      api_element: "http://localhost:5000/api/v0/traintypes/{0}/?format=json"
+	    }
+	  },
 
-	var _defineProperty2 = _interopRequireDefault(_defineProperty);
+	  subscriptions: {
+	    fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Название" }, { id: "visits", name: "Занятий" }, { id: "validDays", name: "Срок действия" }, { id: "price", name: "Стоимость" }, { id: "note", name: "Примечание", type: "textarea" }],
+	    strings: {
+	      page_header: "Абонементы",
+	      add_label: "Добавить абонемент",
+	      edit_label: "Редактировать абонемент",
+	      add_label_short: "Добавить",
+	      update_label_short: "Обновить",
+	      delete_label_short: "Удалить"
+	    },
+	    urls: {
+	      api_root: "http://localhost:5000/api/v0/subscriptions/?format=json",
+	      api_element: "http://localhost:5000/api/v0/subscriptions/{0}/?format=json"
+	    }
+	  },
+
+	  locations: {
+	    fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Название" }, { id: "note", name: "Примечание", type: "textarea" }],
+	    strings: {
+	      page_header: "Залы",
+	      add_label: "Добавить зал",
+	      edit_label: "Редактировать зал",
+	      add_label_short: "Добавить",
+	      update_label_short: "Обновить",
+	      delete_label_short: "Удалить"
+	    },
+	    urls: {
+	      api_root: "http://localhost:5000/api/v0/locations/?format=json",
+	      api_element: "http://localhost:5000/api/v0/locations/{0}/?format=json"
+	    }
+	  },
+
+	  groups: {
+	    fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Название" }, { id: "traintype", name: "Направление тренировок", type: "ref", ref: "traintypes" }, { id: "trainer", name: "Тренер", type: "ref", ref: "trainers" }, { id: "duration", name: "Продолжительность" }, { id: "note", name: "Примечание", type: "textarea" }],
+	    strings: {
+	      page_header: "Группы",
+	      add_label: "Добавить группу",
+	      edit_label: "Редактировать группу",
+	      add_label_short: "Добавить",
+	      update_label_short: "Обновить",
+	      delete_label_short: "Удалить"
+	    },
+	    urls: {
+	      api_root: "http://localhost:5000/api/v0/groups/?format=json",
+	      api_element: "http://localhost:5000/api/v0/groups/{0}/?format=json"
+	    }
+	  },
+
+	  clients: {
+	    fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Имя" }, { id: "phone", name: "Телефон" }, { id: "balance", name: "Баланс" }, { id: "note", name: "Примечание", type: "textarea" }],
+	    strings: {
+	      page_header: "Клиенты",
+	      add_label: "Добавить клиента",
+	      edit_label: "Редактировать клиента",
+	      add_label_short: "Добавить",
+	      update_label_short: "Обновить",
+	      delete_label_short: "Удалить"
+	    },
+	    urls: {
+	      api_root: "http://localhost:5000/api/v0/clients/?format=json",
+	      api_element: "http://localhost:5000/api/v0/clients/{0}/?format=json"
+	    }
+	  }
+	};
+
+	exports.default = SCHEMA;
+
+/***/ },
+/* 512 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _CrudPage = __webpack_require__(503);
+
+	var _CrudPage2 = _interopRequireDefault(_CrudPage);
+
+	var _schema = __webpack_require__(511);
+
+	var _schema2 = _interopRequireDefault(_schema);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	exports.default = function (obj, key, value) {
-	  if (key in obj) {
-	    (0, _defineProperty2.default)(obj, key, {
-	      value: value,
-	      enumerable: true,
-	      configurable: true,
-	      writable: true
-	    });
-	  } else {
-	    obj[key] = value;
+	var Page = _react2.default.createClass({
+	  displayName: 'Page',
+	  render: function render() {
+	    return _react2.default.createElement(_CrudPage2.default, { model: 'trainers', schema: _schema2.default });
 	  }
+	});
 
-	  return obj;
-	};
+	exports.default = Page;
+
+/***/ },
+/* 513 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _CrudPage = __webpack_require__(503);
+
+	var _CrudPage2 = _interopRequireDefault(_CrudPage);
+
+	var _schema = __webpack_require__(511);
+
+	var _schema2 = _interopRequireDefault(_schema);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var Page = _react2.default.createClass({
+	  displayName: 'Page',
+	  render: function render() {
+	    return _react2.default.createElement(_CrudPage2.default, { model: 'traintypes', schema: _schema2.default });
+	  }
+	});
+
+	exports.default = Page;
+
+/***/ },
+/* 514 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _CrudPage = __webpack_require__(503);
+
+	var _CrudPage2 = _interopRequireDefault(_CrudPage);
+
+	var _schema = __webpack_require__(511);
+
+	var _schema2 = _interopRequireDefault(_schema);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var Page = _react2.default.createClass({
+	  displayName: 'Page',
+	  render: function render() {
+	    return _react2.default.createElement(_CrudPage2.default, { model: 'locations', schema: _schema2.default });
+	  }
+	});
+
+	exports.default = Page;
+
+/***/ },
+/* 515 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _CrudPage = __webpack_require__(503);
+
+	var _CrudPage2 = _interopRequireDefault(_CrudPage);
+
+	var _schema = __webpack_require__(511);
+
+	var _schema2 = _interopRequireDefault(_schema);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var Page = _react2.default.createClass({
+	  displayName: 'Page',
+	  render: function render() {
+	    return _react2.default.createElement(_CrudPage2.default, { model: 'subscriptions', schema: _schema2.default });
+	  }
+	});
+
+	exports.default = Page;
+
+/***/ },
+/* 516 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _CrudPage = __webpack_require__(503);
+
+	var _CrudPage2 = _interopRequireDefault(_CrudPage);
+
+	var _schema = __webpack_require__(511);
+
+	var _schema2 = _interopRequireDefault(_schema);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var Page = _react2.default.createClass({
+	  displayName: 'Page',
+	  render: function render() {
+	    return _react2.default.createElement(_CrudPage2.default, { model: 'groups', schema: _schema2.default });
+	  }
+	});
+
+	exports.default = Page;
+
+/***/ },
+/* 517 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(518);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(500)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../node_modules/css-loader/index.js!./../node_modules/postcss-loader/index.js!./../node_modules/sass-loader/index.js!./index.scss", function() {
+				var newContent = require("!!./../node_modules/css-loader/index.js!./../node_modules/postcss-loader/index.js!./../node_modules/sass-loader/index.js!./index.scss");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 518 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(499)();
+	// imports
+
+
+	// module
+	exports.push([module.id, "body {\n  margin: 0;\n  padding: 0;\n  font-family: sans-serif; }\n", ""]);
+
+	// exports
+
 
 /***/ }
 /******/ ]);

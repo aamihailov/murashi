@@ -7,7 +7,7 @@ from .views import *
 router = DefaultRouter()
 router.register(r'clients', ClientViewSet, base_name='client')
 router.register(r'trainers', TrainerViewSet, base_name='trainer')
-router.register(r'train-types', TrainTypeViewSet, base_name='train_type')
+router.register(r'traintypes', TraintypeViewSet, base_name='traintype')
 router.register(r'locations', LocationViewSet, base_name='location')
 router.register(r'subscriptions', SubscriptionViewSet, base_name='subscription')
 router.register(r'groups', GroupsViewSet, base_name='group')

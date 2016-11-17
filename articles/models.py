@@ -37,8 +37,8 @@ class Trainer(models.Model):
         verbose_name_plural = _('trainers')
 
 
-class TrainType(models.Model):
-    owner = models.ForeignKey(User, related_name='own_train_types')
+class Traintype(models.Model):
+    owner = models.ForeignKey(User, related_name='own_traintypes')
     name = models.CharField(max_length=128)
     note = models.TextField(max_length=4096, blank=True)
 
@@ -47,8 +47,8 @@ class TrainType(models.Model):
 
     class Meta:
         ordering = ['id']
-        verbose_name = _('train type')
-        verbose_name_plural = _('train types')
+        verbose_name = _('traintype')
+        verbose_name_plural = _('traintypes')
 
 
 class Location(models.Model):
@@ -85,7 +85,7 @@ class Subscription(models.Model):
 class Group(models.Model):
     owner = models.ForeignKey(User, related_name='own_groups')
     name = models.CharField(max_length=128)
-    trainType = models.ForeignKey(TrainType, null=True)
+    traintype = models.ForeignKey(Traintype, null=True)
     trainer = models.ForeignKey(Trainer, null=True)
     duration = models.IntegerField(default=60)
     note = models.TextField(max_length=4096, blank=True)

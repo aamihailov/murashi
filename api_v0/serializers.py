@@ -30,9 +30,9 @@ class TrainerSerializer(serializers.ModelSerializer):
         ]
 
 
-class TrainTypeSerializer(serializers.ModelSerializer):
+class TraintypeSerializer(serializers.ModelSerializer):
     class Meta:
-        model = TrainType
+        model = Traintype
         fields = [
             'id',
             'name',
@@ -67,26 +67,14 @@ class SubscriptionSerializer(serializers.ModelSerializer):
 
 
 class GroupSerializer(serializers.ModelSerializer):
-    trainType = TrainTypeSerializer(read_only=False)
-
     class Meta:
         model = Group
         fields = [
             'id',
             'name',
-            'trainType',
+            'traintype',
             'trainer',
             'duration',
             'note',
             'url',
         ]
-        extra_kwargs = {'train_type_id': {'write_only': True}}
-        depth = 1
-
-    def create(self, validated_data):
-        train_type_id = validated_data.get('trainType', {id: 1}).get('id', None)
-        validated_data['trainType'] = None
-        group = Group(**validated_data)
-        group.trainType = TrainType.objects.get(pk=train_type_id)
-        group.save()
-        return group

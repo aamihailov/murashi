@@ -21,7 +21,7 @@ class App extends Component {
 
           <Route path="trainer" component={ TrainersPage } />
           <Route path="group" component={ GroupsPage } />
-          <Route path="train-type" component={ TrainTypesPage } />
+          <Route path="traintype" component={ TrainTypesPage } />
           <Route path="subscription" component={ SubscriptionsPage } />
           <Route path="location" component={ LocationsPage } />
 

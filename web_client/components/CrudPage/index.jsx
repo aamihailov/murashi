@@ -10,9 +10,7 @@ var Format = require('string-format')
 var MyTableHeader = React.createClass({
   render(){
     var cols = [];
-    var schema = this.props.schema;
-
-    schema.forEach(function(el) {
+    this.props.schema.forEach((el) => {
       cols.push(<th key={el.id}>{el.name}</th>)
     });
 
@@ -24,16 +22,23 @@ var MyTableHeader = React.createClass({
 
 var MyTableRow = React.createClass({
   handleEdit(e) {
-    this.props.handleEdit(this.props.rowData);
+    var {handleEdit, rowData} = this.props;
+    handleEdit(rowData);
   },
 
   render(){
     var cols = [];
-    var schema = this.props.schema;
-    var rowData = this.props.rowData;
+    var {schema, data, rowData} = this.props;
 
-    schema.forEach(function(el) {
-      cols.push(<td key={el.id}>{rowData[el.id]}</td>)
+    schema.forEach((el) => {
+      var v = '[' + rowData[el.id] + '...]';
+      if (el.type != 'ref') {
+        v = rowData[el.id];
+      } else if (data[el.ref].loaded) {
+        var ref = data[el.ref].dataList[rowData[el.id]];
+        if (ref) { v = ref.name; }
+      }
+      cols.push(<td key={el.id}>{v}</td>)
     });
 
     return(
@@ -45,17 +50,14 @@ var MyTableRow = React.createClass({
 var MyTable = React.createClass({
   render(){
     var rows = [];
-    var schema = this.props.schema;
-    var dataList = this.props.dataList;
-
-    var handleEdit = this.props.handleEdit;
-    dataList.forEach(function(el) {
-      rows.push(<MyTableRow key={el.id} schema={schema} rowData={el} handleEdit={handleEdit}/>)
+    var {schema, model, data, handleEdit} = this.props;
+    data[model].dataList.forEach((el) => {
+      rows.push(<MyTableRow data={data} key={el.id} schema={schema[model].fields} rowData={el} handleEdit={handleEdit}/>)
     });
 
     return(
       <Table striped bordered hover>
-        <MyTableHeader schema={schema}/>
+        <MyTableHeader schema={schema[model].fields}/>
         <tbody>{rows}</tbody>
       </Table>
     );
@@ -68,43 +70,45 @@ var MyAddFormRow = React.createClass({
   },
 
   render(){
+    var {name, value, type, id, wrong} = this.props;
+
     var control;
     var formOptions;
 
     var validationState;
     var errorList;
-    if (this.props.wrong) {
-      console.log(this.props.wrong);
+    if (wrong) {
+      console.log(wrong);
       validationState = "error";
-      errorList = <div>{this.props.wrong}</div>;
+      errorList = <div>{wrong}</div>;
     }
 
-    switch(this.props.type) {
+    switch(type) {
       case 'textarea':
-        control = <FormControl componentClass='textarea' placeholder={this.props.name} value={this.props.value}/>;
+        control = <FormControl componentClass='textarea' placeholder={name} value={value}/>;
         break;
       case 'select':
         var formOptions = [];
         formOptions.push(<option key={0} value={0}>{'...'}</option>);
-        this.state.formOptions.forEach(function(el) {
+        this.state.formOptions.forEach((el) => {
           formOptions.push(
             <option key={el.id} value={el.id}>{el.name}</option>
           );
         });
         control = (
-          <FormControl componentClass='select' placeholder={this.props.name}>
+          <FormControl componentClass='select' placeholder={name}>
             {formOptions}
           </FormControl>
         );
         break;
       default:
-        control = <FormControl type='text' placeholder={this.props.name} value={this.props.value}/>;
+        control = <FormControl type='text' placeholder={name} value={value}/>;
         break;
     }
 
     return(
-      <FormGroup validationState={validationState} controlId={this.props.id}>
-        <Col componentClass={ControlLabel} sm={2}>{this.props.name}</Col>
+      <FormGroup validationState={validationState} controlId={id}>
+        <Col componentClass={ControlLabel} sm={2}>{name}</Col>
         <Col sm={10}>
           {control}
           <FormControl.Feedback />
@@ -206,7 +210,7 @@ var MyAddForm = React.createClass({
 
     var dataElement = this.props.dataElement ? this.props.dataElement : {};
     var wrong = this.state.wrongFields;
-    schema.forEach(function(el) {
+    schema.forEach((el) => {
       if (!el.readonly) {
         var editValue = dataElement[el.id];
         controls.push(
@@ -271,9 +275,11 @@ const MyAddModal = React.createClass({
   },
 
   render() {
-    var {schema, strings, urls} = this.props;
-    var show = this.props.dataElement ? true : this.state.showModal;
-    var title = this.props.dataElement ? strings.edit_label : strings.add_label;
+    var {model, handleEdit} = this.props;
+    var {fields, strings, urls} = this.props.schema[model];
+    var {dataElement} = this.props.data[model];
+    var show = dataElement ? true : this.state.showModal;
+    var title = dataElement ? strings.edit_label : strings.add_label;
     return (
       <div>
         <Button bsStyle="primary" bsSize="large" onClick={this.open}>
@@ -285,12 +291,12 @@ const MyAddModal = React.createClass({
             <Modal.Title>{title}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <MyAddForm schema={schema}
+            <MyAddForm schema={fields}
                        strings={strings}
                        urls={urls}
                        handleClose={this.handleClose}
-                       handleEdit={this.props.handleEdit}
-                       dataElement={this.props.dataElement}
+                       handleEdit={handleEdit}
+                       dataElement={dataElement}
             />
           </Modal.Body>
         </Modal>
@@ -301,35 +307,48 @@ const MyAddModal = React.createClass({
 
 const MyCRUDPage = React.createClass({
   getInitialState() {
-    var {model} = this.props;
-    return {
-      [model]: {
+    var ans = {}
+    for (var model in this.props.schema) {
+      ans[model] = {
+        loaded: false,
         dataList: [],
         dataElement: null
       }
-    };
+    }
+    return ans;
   },
 
   handleUpdate() {
-    var {model} = this.props;
-    var schema = this.props.schema[model];
-    this.setState({[model]: update(this.state[model], {dataElement: {$set: null}})});
+    var models_to_update = [ this.props.model ];
+    this.props.schema[this.props.model].fields.forEach((field) => {
+      if (field.type == 'ref') {
+        models_to_update.push(field.ref);
+      }
+    });
 
-    fetch(schema.urls.api_root, {
-      credentials: 'include',
-      headers: {
-        'X-CSRFToken': cookie.load('csrftoken')
-      }
-    })
-    .then((response) => {
-      if (response.ok) {
-        response.json().then((dataList) => {
-          this.setState({[model]: update(this.state[model], {dataList: {$set: dataList}})});
-        })
-      }
-    })
-    .catch((error) => {
-      console.error(error);
+    models_to_update.forEach((model) => {
+      var schema = this.props.schema[model];
+      this.setState({[model]: update(this.state[model], {dataElement: {$set: null}})});
+      fetch(schema.urls.api_root, {
+        credentials: 'include',
+        headers: {
+          'X-CSRFToken': cookie.load('csrftoken')
+        }
+      })
+      .then((response) => {
+        if (response.ok) {
+          response.json().then((dataList) => {
+            var data = [];
+            dataList.forEach((el) => { data[el.id] = el; })
+            this.setState({[model]: update(this.state[model], {dataList: {$set: data},
+                                                               loaded: {$set: true}
+                                                              })});
+          })
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
     });
   },
 
@@ -343,18 +362,17 @@ const MyCRUDPage = React.createClass({
   },
 
   render(){
-    var {model} = this.props;
-    var schema = this.props.schema[model];
+    var {model, schema} = this.props;
     return(
       <div>
-        <PageHeader>{schema.strings.page_header}</PageHeader>
-        <MyTable schema={schema.fields}
-                 dataList={this.state[model].dataList}
+        <PageHeader>{schema[model].strings.page_header}</PageHeader>
+        <MyTable model={model}
+                 schema={schema}
+                 data={this.state}
                  handleEdit={this.handleEdit}/>
-        <MyAddModal schema={schema.fields}
-                    strings={schema.strings}
-                    urls={schema.urls}
-                    dataElement={this.state[model].dataElement}
+        <MyAddModal model={model}
+                    schema={schema}
+                    data={this.state}
                     handleUpdate={this.handleUpdate}
                     handleEdit={this.handleEdit}/>
       </div>
