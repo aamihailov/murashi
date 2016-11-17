@@ -5,7 +5,7 @@ import schema from '../../schema'
 var Page = React.createClass({
   render(){
     return(
-      <CrudPage model={'trainers'} schema={schema}/>
+      <CrudPage model={'trainer'} schema={schema}/>
     );
   }
 });

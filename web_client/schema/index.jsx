@@ -1,5 +1,5 @@
 var SCHEMA = {
-  trainers: {
+  trainer: {
     fields: [
       {id: "id", name: "#", readonly: true},
       {id: "name", name: "Имя"},
@@ -21,7 +21,7 @@ var SCHEMA = {
     }
   },
 
-  traintypes: {
+  traintype: {
     fields: [
       {id: "id", name: "#", readonly: true},
       {id: "name", name: "Название"},
@@ -41,7 +41,7 @@ var SCHEMA = {
     }
   },
 
-  subscriptions: {
+  subscription: {
     fields: [
       {id: "id", name: "#", readonly: true},
       {id: "name", name: "Название"},
@@ -64,7 +64,7 @@ var SCHEMA = {
     }
   },
 
-  locations: {
+  location: {
     fields: [
       {id: "id", name: "#", readonly: true},
       {id: "name", name: "Название"},
@@ -84,12 +84,12 @@ var SCHEMA = {
     }
   },
 
-  groups: {
+  group: {
     fields: [
       {id: "id", name: "#", readonly: true},
       {id: "name", name: "Название"},
-      {id: "traintype", name: "Направление тренировок", type: "ref", ref: "traintypes"},
-      {id: "trainer", name: "Тренер", type: "ref", ref: "trainers"},
+      {id: "traintype", name: "Направление тренировок", type: "ref", ref: "traintype"},
+      {id: "trainer", name: "Тренер", type: "ref", ref: "trainer"},
       {id: "duration", name: "Продолжительность"},
       {id: "note", name: "Примечание", type: "textarea"}
     ],
@@ -107,7 +107,7 @@ var SCHEMA = {
     }
   },
 
-  clients: {
+  client: {
     fields: [
       {id: "id", name: "#", readonly: true},
       {id: "name", name: "Имя"},

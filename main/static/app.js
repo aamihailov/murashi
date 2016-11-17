@@ -46630,7 +46630,7 @@
 	var Page = _react2.default.createClass({
 	  displayName: 'Page',
 	  render: function render() {
-	    return _react2.default.createElement(_CrudPage2.default, { model: 'clients', schema: _schema2.default });
+	    return _react2.default.createElement(_CrudPage2.default, { model: 'client', schema: _schema2.default });
 	  }
 	});
 
@@ -46767,9 +46767,6 @@
 
 	var MyAddFormRow = _react2.default.createClass({
 	  displayName: 'MyAddFormRow',
-	  getInitialState: function getInitialState() {
-	    return { formOptions: [] };
-	  },
 	  render: function render() {
 	    var _props4 = this.props,
 	        name = _props4.name,
@@ -46780,7 +46777,6 @@
 
 
 	    var control;
-	    var formOptions;
 
 	    var validationState;
 	    var errorList;
@@ -46798,6 +46794,8 @@
 	      case 'textarea':
 	        control = _react2.default.createElement(_reactBootstrap.FormControl, { componentClass: 'textarea', placeholder: name, value: value });
 	        break;
+	      case 'ref':
+	        console.log(this.props);
 	      case 'select':
 	        var formOptions = [];
 	        formOptions.push(_react2.default.createElement(
@@ -46805,13 +46803,11 @@
 	          { key: 0, value: 0 },
 	          '...'
 	        ));
-	        this.state.formOptions.forEach(function (el) {
-	          formOptions.push(_react2.default.createElement(
-	            'option',
-	            { key: el.id, value: el.id },
-	            el.name
-	          ));
-	        });
+	        //        this.state.formOptions.forEach((el) => {
+	        //          formOptions.push(
+	        //            <option key={el.id} value={el.id}>{el.name}</option>
+	        //          );
+	        //        });
 	        control = _react2.default.createElement(
 	          _reactBootstrap.FormControl,
 	          { componentClass: 'select', placeholder: name },
@@ -46927,6 +46923,8 @@
 	    });
 	  },
 	  render: function render() {
+	    var _this4 = this;
+
 	    var controls = [];
 	    var schema = this.props.schema;
 	    var handleChange = this.handleChange;
@@ -46936,12 +46934,17 @@
 	    schema.forEach(function (el) {
 	      if (!el.readonly) {
 	        var editValue = dataElement[el.id];
-	        controls.push(_react2.default.createElement(MyAddFormRow, { key: el.id,
-	          id: el.id,
-	          wrong: wrong[el.id],
-	          name: el.name,
-	          type: el.type,
-	          value: editValue
+	        var id = el.id,
+	            name = el.name,
+	            type = el.type;
+
+	        controls.push(_react2.default.createElement(MyAddFormRow, { key: id,
+	          id: id,
+	          wrong: wrong[id],
+	          name: name,
+	          type: type,
+	          value: editValue,
+	          data: _this4.props.data
 	        }));
 	      }
 	    });
@@ -47001,13 +47004,15 @@
 	  },
 	  render: function render() {
 	    var _props5 = this.props,
+	        data = _props5.data,
+	        schema = _props5.schema,
 	        model = _props5.model,
 	        handleEdit = _props5.handleEdit;
-	    var _props$schema$model = this.props.schema[model],
-	        fields = _props$schema$model.fields,
-	        strings = _props$schema$model.strings,
-	        urls = _props$schema$model.urls;
-	    var dataElement = this.props.data[model].dataElement;
+	    var _schema$model = schema[model],
+	        fields = _schema$model.fields,
+	        strings = _schema$model.strings,
+	        urls = _schema$model.urls;
+	    var dataElement = data[model].dataElement;
 
 	    var show = dataElement ? true : this.state.showModal;
 	    var title = dataElement ? strings.edit_label : strings.add_label;
@@ -47039,7 +47044,8 @@
 	            urls: urls,
 	            handleClose: this.handleClose,
 	            handleEdit: handleEdit,
-	            dataElement: dataElement
+	            dataElement: dataElement,
+	            data: data
 	          })
 	        )
 	      )
@@ -47061,7 +47067,7 @@
 	    return ans;
 	  },
 	  handleUpdate: function handleUpdate() {
-	    var _this4 = this;
+	    var _this5 = this;
 
 	    var models_to_update = [this.props.model];
 	    this.props.schema[this.props.model].fields.forEach(function (field) {
@@ -47071,8 +47077,8 @@
 	    });
 
 	    models_to_update.forEach(function (model) {
-	      var schema = _this4.props.schema[model];
-	      _this4.setState((0, _defineProperty3.default)({}, model, (0, _immutabilityHelper2.default)(_this4.state[model], { dataElement: { $set: null } })));
+	      var schema = _this5.props.schema[model];
+	      _this5.setState((0, _defineProperty3.default)({}, model, (0, _immutabilityHelper2.default)(_this5.state[model], { dataElement: { $set: null } })));
 	      fetch(schema.urls.api_root, {
 	        credentials: 'include',
 	        headers: {
@@ -47085,7 +47091,7 @@
 	            dataList.forEach(function (el) {
 	              data[el.id] = el;
 	            });
-	            _this4.setState((0, _defineProperty3.default)({}, model, (0, _immutabilityHelper2.default)(_this4.state[model], { dataList: { $set: data },
+	            _this5.setState((0, _defineProperty3.default)({}, model, (0, _immutabilityHelper2.default)(_this5.state[model], { dataList: { $set: data },
 	              loaded: { $set: true }
 	            })));
 	          });
@@ -47789,7 +47795,7 @@
 	  value: true
 	});
 	var SCHEMA = {
-	  trainers: {
+	  trainer: {
 	    fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Имя" }, { id: "phone", name: "Телефон" }, { id: "balance", name: "Баланс" }, { id: "note", name: "Примечание", type: "textarea" }],
 	    strings: {
 	      page_header: "Тренеры",
@@ -47805,7 +47811,7 @@
 	    }
 	  },
 
-	  traintypes: {
+	  traintype: {
 	    fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Название" }, { id: "note", name: "Примечание", type: "textarea" }],
 	    strings: {
 	      page_header: "Направления тренировок",
@@ -47821,7 +47827,7 @@
 	    }
 	  },
 
-	  subscriptions: {
+	  subscription: {
 	    fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Название" }, { id: "visits", name: "Занятий" }, { id: "validDays", name: "Срок действия" }, { id: "price", name: "Стоимость" }, { id: "note", name: "Примечание", type: "textarea" }],
 	    strings: {
 	      page_header: "Абонементы",
@@ -47837,7 +47843,7 @@
 	    }
 	  },
 
-	  locations: {
+	  location: {
 	    fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Название" }, { id: "note", name: "Примечание", type: "textarea" }],
 	    strings: {
 	      page_header: "Залы",
@@ -47853,8 +47859,8 @@
 	    }
 	  },
 
-	  groups: {
-	    fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Название" }, { id: "traintype", name: "Направление тренировок", type: "ref", ref: "traintypes" }, { id: "trainer", name: "Тренер", type: "ref", ref: "trainers" }, { id: "duration", name: "Продолжительность" }, { id: "note", name: "Примечание", type: "textarea" }],
+	  group: {
+	    fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Название" }, { id: "traintype", name: "Направление тренировок", type: "ref", ref: "traintype" }, { id: "trainer", name: "Тренер", type: "ref", ref: "trainer" }, { id: "duration", name: "Продолжительность" }, { id: "note", name: "Примечание", type: "textarea" }],
 	    strings: {
 	      page_header: "Группы",
 	      add_label: "Добавить группу",
@@ -47869,7 +47875,7 @@
 	    }
 	  },
 
-	  clients: {
+	  client: {
 	    fields: [{ id: "id", name: "#", readonly: true }, { id: "name", name: "Имя" }, { id: "phone", name: "Телефон" }, { id: "balance", name: "Баланс" }, { id: "note", name: "Примечание", type: "textarea" }],
 	    strings: {
 	      page_header: "Клиенты",
@@ -47915,7 +47921,7 @@
 	var Page = _react2.default.createClass({
 	  displayName: 'Page',
 	  render: function render() {
-	    return _react2.default.createElement(_CrudPage2.default, { model: 'trainers', schema: _schema2.default });
+	    return _react2.default.createElement(_CrudPage2.default, { model: 'trainer', schema: _schema2.default });
 	  }
 	});
 
@@ -47948,7 +47954,7 @@
 	var Page = _react2.default.createClass({
 	  displayName: 'Page',
 	  render: function render() {
-	    return _react2.default.createElement(_CrudPage2.default, { model: 'traintypes', schema: _schema2.default });
+	    return _react2.default.createElement(_CrudPage2.default, { model: 'traintype', schema: _schema2.default });
 	  }
 	});
 
@@ -47981,7 +47987,7 @@
 	var Page = _react2.default.createClass({
 	  displayName: 'Page',
 	  render: function render() {
-	    return _react2.default.createElement(_CrudPage2.default, { model: 'locations', schema: _schema2.default });
+	    return _react2.default.createElement(_CrudPage2.default, { model: 'location', schema: _schema2.default });
 	  }
 	});
 
@@ -48014,7 +48020,7 @@
 	var Page = _react2.default.createClass({
 	  displayName: 'Page',
 	  render: function render() {
-	    return _react2.default.createElement(_CrudPage2.default, { model: 'subscriptions', schema: _schema2.default });
+	    return _react2.default.createElement(_CrudPage2.default, { model: 'subscription', schema: _schema2.default });
 	  }
 	});
 
@@ -48047,7 +48053,7 @@
 	var Page = _react2.default.createClass({
 	  displayName: 'Page',
 	  render: function render() {
-	    return _react2.default.createElement(_CrudPage2.default, { model: 'groups', schema: _schema2.default });
+	    return _react2.default.createElement(_CrudPage2.default, { model: 'group', schema: _schema2.default });
 	  }
 	});
 

@@ -65,15 +65,10 @@ var MyTable = React.createClass({
 });
 
 var MyAddFormRow = React.createClass({
-  getInitialState() {
-    return {formOptions: []};
-  },
-
   render(){
     var {name, value, type, id, wrong} = this.props;
 
     var control;
-    var formOptions;
 
     var validationState;
     var errorList;
@@ -87,14 +82,16 @@ var MyAddFormRow = React.createClass({
       case 'textarea':
         control = <FormControl componentClass='textarea' placeholder={name} value={value}/>;
         break;
+      case 'ref':
+        console.log(this.props);
       case 'select':
         var formOptions = [];
         formOptions.push(<option key={0} value={0}>{'...'}</option>);
-        this.state.formOptions.forEach((el) => {
-          formOptions.push(
-            <option key={el.id} value={el.id}>{el.name}</option>
-          );
-        });
+//        this.state.formOptions.forEach((el) => {
+//          formOptions.push(
+//            <option key={el.id} value={el.id}>{el.name}</option>
+//          );
+//        });
         control = (
           <FormControl componentClass='select' placeholder={name}>
             {formOptions}
@@ -213,13 +210,15 @@ var MyAddForm = React.createClass({
     schema.forEach((el) => {
       if (!el.readonly) {
         var editValue = dataElement[el.id];
+        var {id, name, type} = el;
         controls.push(
-          <MyAddFormRow key={el.id}
-            id={el.id}
-            wrong={wrong[el.id]}
-            name={el.name}
-            type={el.type}
+          <MyAddFormRow key={id}
+            id={id}
+            wrong={wrong[id]}
+            name={name}
+            type={type}
             value={editValue}
+            data={this.props.data}
           />
         );
       }
@@ -275,9 +274,9 @@ const MyAddModal = React.createClass({
   },
 
   render() {
-    var {model, handleEdit} = this.props;
-    var {fields, strings, urls} = this.props.schema[model];
-    var {dataElement} = this.props.data[model];
+    var {data, schema, model, handleEdit} = this.props;
+    var {fields, strings, urls} = schema[model];
+    var {dataElement} = data[model];
     var show = dataElement ? true : this.state.showModal;
     var title = dataElement ? strings.edit_label : strings.add_label;
     return (
@@ -297,6 +296,7 @@ const MyAddModal = React.createClass({
                        handleClose={this.handleClose}
                        handleEdit={handleEdit}
                        dataElement={dataElement}
+                       data={data}
             />
           </Modal.Body>
         </Modal>
