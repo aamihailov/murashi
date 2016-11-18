@@ -71,3 +71,22 @@ class GroupsViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
+
+
+class EventsViewSet(viewsets.ModelViewSet):
+    serializer_class = EventSerializer
+    permission_classes = (permissions.IsAuthenticated, )
+
+    def get_queryset(self):
+        return self.request.user.creator.all()
+
+    def perform_create(self, serializer):
+        serializer.save(creator=self.request.user)
+
+
+class RulesViewSet(viewsets.ModelViewSet):
+    serializer_class = RuleSerializer
+    permission_classes = (permissions.IsAuthenticated, )
+
+    def get_queryset(self):
+        return Rule.objects.all()

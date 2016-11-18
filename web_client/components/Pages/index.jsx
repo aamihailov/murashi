@@ -1,4 +1,5 @@
 import React from 'react'
+import { PageHeader } from 'react-bootstrap'
 import CrudPage from '../CrudPage'
 import schema from '../../schema'
 
@@ -31,5 +32,4 @@ export const TrainTypesPage = props => (
 export const TrainersPage = props => (
   <CrudPage model={'trainer'} schema={schema}/>
 );
-
 

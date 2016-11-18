@@ -127,7 +127,58 @@ var SCHEMA = {
       api_root: "http://localhost:5000/api/v0/clients/?format=json",
       api_element: "http://localhost:5000/api/v0/clients/{0}/?format=json"
     }
-  }
+  },
+
+  event: {
+    fields: [
+      {id: "id", name: "#", readonly: true},
+      {id: "start", name: "Начало", type: "datetime"},
+      {id: "end", name: "Конец", type: "datetime"},
+      {id: "title", name: "Название"},
+      {id: "description", name: "Примечание", type: "textarea"},
+      {id: "created_on", name: "Создано", type: "datetime"},
+      {id: "updated_on", name: "Изменено", type: "datetime"},
+      {id: "rule", name: "Правило", type: "ref", ref: "rule"},
+      {id: "end_recurring_period", name: "Конец повторения", type: "datetime"},
+      {id: "color_event", name: "Цвет"},
+    ],
+    strings: {
+      page_header: "Событие",
+      add_label: "Добавить событие",
+      edit_label: "Редактировать событие",
+      add_label_short: "Добавить",
+      update_label_short: "Обновить",
+      delete_label_short: "Удалить"
+    },
+    urls: {
+      api_root: "http://localhost:5000/api/v0/events/?format=json",
+      api_element: "http://localhost:5000/api/v0/events/{0}/?format=json"
+    }
+  },
+
+  rule: {
+    fields: [
+      {id: "id", name: "#", readonly: true},
+      {id: "name", name: "Имя"},
+      {id: "description", name: "Примечание", type: "textarea"},
+      {id: "frequency", name: "Частота"},
+      {id: "params", name: "Параметры"},
+    ],
+    strings: {
+      page_header: "Клиенты",
+      add_label: "Добавить правило",
+      edit_label: "Редактировать правило",
+      add_label_short: "Добавить",
+      update_label_short: "Обновить",
+      delete_label_short: "Удалить"
+    },
+    urls: {
+      api_root: "http://localhost:5000/api/v0/rules/?format=json",
+      api_element: "http://localhost:5000/api/v0/rules/{0}/?format=json"
+    }
+  },
+
+
 };
 
 export default SCHEMA

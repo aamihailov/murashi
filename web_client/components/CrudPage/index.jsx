@@ -5,6 +5,10 @@ import { Modal, Popover } from 'react-bootstrap'
 import cookie from 'react-cookie';
 import update from 'immutability-helper';
 
+import moment from 'moment';
+import Datetime from 'react-datetime'
+import 'react-datetime/css/react-datetime.css'
+
 var Format = require('string-format')
 
 var MyTableHeader = React.createClass({
@@ -31,7 +35,7 @@ var MyTableRow = React.createClass({
     var {schema, data, rowData} = this.props;
 
     schema.forEach((el) => {
-      var v = '[' + rowData[el.id] + '...]';
+      var v = '[...]';
       if (el.type != 'ref') {
         v = rowData[el.id];
       } else if (data[el.ref].loaded) {
@@ -73,7 +77,6 @@ var MyAddFormRow = React.createClass({
     var validationState;
     var errorList;
     if (wrong) {
-      console.log(wrong);
       validationState = "error";
       errorList = <div>{wrong}</div>;
     }
@@ -82,8 +85,10 @@ var MyAddFormRow = React.createClass({
       case 'textarea':
         control = <FormControl componentClass='textarea' placeholder={name} value={value}/>;
         break;
+      case 'datetime':
+        control = <Datetime value={moment(value)}/>;
+        break;
       case 'ref':
-        console.log(this.props);
         var formOptions = [];
         formOptions.push(<option key={0} value={0}>{'...'}</option>);
         if (data[id].loaded) {
@@ -128,7 +133,7 @@ var MyAddForm = React.createClass({
     if (this.props.dataElement) {
       var dataElement = this.props.dataElement;
       if (e.target.type == 'select-one' && e.target.value == 0) {
-        dataElement[e.target.id] = null;
+        dataElement[e.target.id] = '';
       } else {
         dataElement[e.target.id] = e.target.value;
       }

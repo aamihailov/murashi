@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from articles.models import *
+from schedule.models import *
 
 
 class ClientSerializer(serializers.ModelSerializer):
@@ -76,5 +77,36 @@ class GroupSerializer(serializers.ModelSerializer):
             'trainer',
             'duration',
             'note',
+            'url',
+        ]
+
+
+class EventSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Event
+        fields = [
+            'id',
+            'start',
+            'end',
+            'title',
+            'description',
+            'created_on',
+            'updated_on',
+            'rule',
+            'end_recurring_period',
+            'color_event',
+            'url',
+        ]
+
+
+class RuleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Rule
+        fields = [
+            'id',
+            'name',
+            'description',
+            'frequency',
+            'params',
             'url',
         ]

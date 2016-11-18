@@ -15,7 +15,11 @@ export default props => {
         </Navbar.Brand>
       </Navbar.Header>
       <Nav bsStyle="tabs" activeKey={activeKey}>
-        <NavItem eventKey="/schedule" href="/schedule">Расписание</NavItem>
+        <NavDropdown title="Расписание" id="nav-dropdown">
+          <MenuItem eventKey="/schedule" href="/schedule">Календарь</MenuItem>
+          <MenuItem eventKey="/event" href="/event">События</MenuItem>
+          <MenuItem eventKey="/rule" href="/rule">Правила</MenuItem>
+        </NavDropdown>
         <NavItem eventKey="/client" href="/client">Клиенты</NavItem>
         <NavDropdown title="Тренировки" id="nav-dropdown">
           <MenuItem eventKey="/trainer" href="/trainer">Тренеры</MenuItem>

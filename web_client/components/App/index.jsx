@@ -3,7 +3,7 @@ import { Router, Route, IndexRoute, browserHistory } from 'react-router'
 import LayoutBase from '../LayoutBase'
 import { EmptyPage,
          ClientsPage, TrainersPage, TrainTypesPage, LocationsPage, SubscriptionsPage, GroupsPage } from '../Pages'
-import { CalendarPage } from '../CalendarPage'
+import { CalendarPage, EventsPage, RulesPage } from '../CalendarPage'
 
 class App extends Component {
   render() {
@@ -12,6 +12,8 @@ class App extends Component {
         <Route path="/" component={ LayoutBase }>
           <IndexRoute component={ EmptyPage } />
           <Route path="schedule" component={ CalendarPage } />
+          <Route path="event" component={ EventsPage } />
+          <Route path="rule" component={ RulesPage } />
 
           <Route path="client" component={ ClientsPage } />
 
