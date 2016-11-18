@@ -1,13 +1,7 @@
 import React, { Component } from 'react';
 import { Router, Route, IndexRoute, browserHistory } from 'react-router'
 import LayoutBase from '../LayoutBase'
-import EmptyPage from '../EmptyPage'
-import ClientsPage from '../ClientsPage'
-import TrainersPage from '../TrainersPage'
-import TrainTypesPage from '../TrainTypesPage'
-import LocationsPage from '../LocationsPage'
-import SubscriptionsPage from '../SubscriptionsPage'
-import GroupsPage from '../GroupsPage'
+import { EmptyPage, ClientsPage, TrainersPage, TrainTypesPage, LocationsPage, SubscriptionsPage, GroupsPage } from '../Pages'
 
 class App extends Component {
   render() {
