@@ -46523,9 +46523,7 @@
 	        v = rowData[el.id];
 	      } else if (data[el.ref].loaded) {
 	        var ref = data[el.ref].dataList[rowData[el.id]];
-	        if (ref) {
-	          v = ref.name;
-	        }
+	        v = ref ? ref.name : null;
 	      }
 	      cols.push(_react2.default.createElement(
 	        'td',
@@ -46658,7 +46656,11 @@
 	  handleChange: function handleChange(e) {
 	    if (this.props.dataElement) {
 	      var dataElement = this.props.dataElement;
-	      dataElement[e.target.id] = e.target.value;
+	      if (e.target.type == 'select-one' && e.target.value == 0) {
+	        dataElement[e.target.id] = null;
+	      } else {
+	        dataElement[e.target.id] = e.target.value;
+	      }
 	      this.props.handleEdit(dataElement);
 	    } else {
 	      var formData = this.state.formData;

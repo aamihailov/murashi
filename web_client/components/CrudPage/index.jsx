@@ -36,7 +36,7 @@ var MyTableRow = React.createClass({
         v = rowData[el.id];
       } else if (data[el.ref].loaded) {
         var ref = data[el.ref].dataList[rowData[el.id]];
-        if (ref) { v = ref.name; }
+        v = ref ? ref.name : null;
       }
       cols.push(<td key={el.id}>{v}</td>)
     });
@@ -127,7 +127,11 @@ var MyAddForm = React.createClass({
   handleChange(e) {
     if (this.props.dataElement) {
       var dataElement = this.props.dataElement;
-      dataElement[e.target.id] = e.target.value;
+      if (e.target.type == 'select-one' && e.target.value == 0) {
+        dataElement[e.target.id] = null;
+      } else {
+        dataElement[e.target.id] = e.target.value;
+      }
       this.props.handleEdit(dataElement);
     } else {
       var formData = this.state.formData;
