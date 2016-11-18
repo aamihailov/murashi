@@ -66,7 +66,7 @@ var MyTable = React.createClass({
 
 var MyAddFormRow = React.createClass({
   render(){
-    var {name, value, type, id, wrong} = this.props;
+    var {name, value, type, id, wrong, data} = this.props;
 
     var control;
 
@@ -84,16 +84,17 @@ var MyAddFormRow = React.createClass({
         break;
       case 'ref':
         console.log(this.props);
-      case 'select':
         var formOptions = [];
         formOptions.push(<option key={0} value={0}>{'...'}</option>);
-//        this.state.formOptions.forEach((el) => {
-//          formOptions.push(
-//            <option key={el.id} value={el.id}>{el.name}</option>
-//          );
-//        });
+        if (data[id].loaded) {
+          data[id].dataList.forEach((el) => {
+            formOptions.push(
+              <option key={el.id} value={el.id}>{el.name}</option>
+            );
+          });
+        }
         control = (
-          <FormControl componentClass='select' placeholder={name}>
+          <FormControl componentClass='select' placeholder={name} value={value}>
             {formOptions}
           </FormControl>
         );
