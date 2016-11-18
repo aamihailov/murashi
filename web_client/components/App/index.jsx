@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { Router, Route, IndexRoute, browserHistory } from 'react-router'
 import LayoutBase from '../LayoutBase'
-import { EmptyPage, ClientsPage, TrainersPage, TrainTypesPage, LocationsPage, SubscriptionsPage, GroupsPage } from '../Pages'
+import { EmptyPage,
+         ClientsPage, TrainersPage, TrainTypesPage, LocationsPage, SubscriptionsPage, GroupsPage } from '../Pages'
+import { CalendarPage } from '../CalendarPage'
 
 class App extends Component {
   render() {
@@ -9,7 +11,7 @@ class App extends Component {
       <Router history={ browserHistory }>
         <Route path="/" component={ LayoutBase }>
           <IndexRoute component={ EmptyPage } />
-          <Route path="schedule" component={ EmptyPage } />
+          <Route path="schedule" component={ CalendarPage } />
 
           <Route path="client" component={ ClientsPage } />
 

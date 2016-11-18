@@ -10,7 +10,7 @@ export default {
         filename: 'app.js'
     },
     resolve: {
-        extensions: ['', '.js', '.jsx', '.scss'],
+        extensions: ['', '.js', '.jsx', '.css', '.scss'],
         modulesDirectories: [
             'node_modules'
         ]
@@ -27,6 +27,10 @@ export default {
                     plugins: ['transform-runtime'],
                     presets: ['es2015', 'stage-0', 'react']
                 }
+            },
+            {
+                test: /\.css$/,
+                loader: "style-loader!css-loader"
             },
             {
                 test: /\.s[a|c]ss$/,
