@@ -116,6 +116,10 @@ export const EventsPage = props => (
   <CrudPage model={'event'} schema={schema}/>
 );
 
+export const OccurrencesPage = props => (
+  <CrudPage model={'occurrence'} schema={schema}/>
+);
+
 export const RulesPage = props => (
   <CrudPage model={'rule'} schema={schema}/>
 );

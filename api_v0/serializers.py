@@ -99,6 +99,24 @@ class EventSerializer(serializers.ModelSerializer):
         ]
 
 
+class OccurrenceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Occurrence
+        fields = [
+            'id',
+            'event',
+            'title',
+            'description',
+            'start',
+            'end',
+            'original_start',
+            'original_end',
+            'created_on',
+            'updated_on',
+            # 'url',
+        ]
+
+
 class RuleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rule

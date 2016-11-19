@@ -32,15 +32,24 @@ var MyTableRow = React.createClass({
 
   render(){
     var cols = [];
-    var {schema, data, rowData} = this.props;
+    var {model, schema, data, rowData} = this.props;
 
-    schema.forEach((el) => {
+    schema[model].fields.forEach((el) => {
       var v = '[...]';
-      if (el.type != 'ref') {
-        v = rowData[el.id];
-      } else if (data[el.ref].loaded) {
-        var ref = data[el.ref].dataList[rowData[el.id]];
-        v = ref ? ref.name : null;
+      switch(el.type) {
+        case 'ref':
+          if (data[el.ref].loaded) {
+            var ref = data[el.ref].dataList[rowData[el.id]];
+            console.log(schema[el.ref].name);
+            v = ref ? schema[el.ref].name ? ref[schema[el.ref].name] : ref.name : null;
+          }
+          break;
+        case 'datetime':
+          v = rowData[el.id] ? moment(rowData[el.id]).format('dddd, DD.MM.YYYY, HH:mm:ss') : null;
+          break
+        default:
+          v = rowData[el.id];
+          break;
       }
       cols.push(<td key={el.id}>{v}</td>)
     });
@@ -55,9 +64,11 @@ var MyTable = React.createClass({
   render(){
     var rows = [];
     var {schema, model, data, handleEdit} = this.props;
-    data[model].dataList.forEach((el) => {
-      rows.push(<MyTableRow data={data} key={el.id} schema={schema[model].fields} rowData={el} handleEdit={handleEdit}/>)
-    });
+    var {dataList} = data[model]
+    for (var k in dataList) {
+      var el = dataList[k];
+      rows.push(<MyTableRow data={data} key={el.id} schema={schema} model={model} rowData={el} handleEdit={handleEdit}/>)
+    }
 
     return(
       <Table striped bordered hover>
@@ -70,7 +81,7 @@ var MyTable = React.createClass({
 
 var MyAddFormRow = React.createClass({
   render(){
-    var {name, value, type, id, wrong, data} = this.props;
+    var {schema, name, value, type, id, wrong, data, handleChange} = this.props;
 
     var control;
 
@@ -83,10 +94,14 @@ var MyAddFormRow = React.createClass({
 
     switch(type) {
       case 'textarea':
-        control = <FormControl componentClass='textarea' placeholder={name} value={value}/>;
+        control = <FormControl componentClass='textarea' placeholder={name} value={value ? value : ''}/>;
         break;
       case 'datetime':
-        control = <Datetime value={moment(value)}/>;
+        control = (
+          <Datetime value={value ? moment(value) : value}
+                    onChange={m=>{handleChange({target:{id:id, type:'datetime', value:m.format()}});}}
+          />
+        );
         break;
       case 'ref':
         var formOptions = [];
@@ -94,7 +109,7 @@ var MyAddFormRow = React.createClass({
         if (data[id].loaded) {
           data[id].dataList.forEach((el) => {
             formOptions.push(
-              <option key={el.id} value={el.id}>{el.name}</option>
+              <option key={el.id} value={el.id}>{schema[id].name ? el[schema[id].name] : el.name}</option>
             );
           });
         }
@@ -212,12 +227,12 @@ var MyAddForm = React.createClass({
 
   render(){
     var controls = [];
-    var schema = this.props.schema;
+    var {schema, model} = this.props;
     var handleChange = this.handleChange;
 
     var dataElement = this.props.dataElement ? this.props.dataElement : {};
     var wrong = this.state.wrongFields;
-    schema.forEach((el) => {
+    schema[model].fields.forEach((el) => {
       if (!el.readonly) {
         var editValue = dataElement[el.id];
         var {id, name, type} = el;
@@ -227,7 +242,9 @@ var MyAddForm = React.createClass({
             wrong={wrong[id]}
             name={name}
             type={type}
+            schema={schema}
             value={editValue}
+            handleChange={handleChange}
             data={this.props.data}
           />
         );
@@ -300,7 +317,8 @@ const MyAddModal = React.createClass({
             <Modal.Title>{title}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <MyAddForm schema={fields}
+            <MyAddForm schema={schema}
+                       model={model}
                        strings={strings}
                        urls={urls}
                        handleClose={this.handleClose}
@@ -349,7 +367,11 @@ const MyCRUDPage = React.createClass({
         if (response.ok) {
           response.json().then((dataList) => {
             var data = [];
-            dataList.forEach((el) => { data[el.id] = el; })
+            var it = -1;
+            dataList.forEach(el => {
+              if (el.id == null) { el.id = it--; }
+              data[el.id] = el;
+            })
             this.setState({[model]: update(this.state[model], {dataList: {$set: data},
                                                                loaded: {$set: true}
                                                               })});

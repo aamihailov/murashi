@@ -132,27 +132,56 @@ var SCHEMA = {
   event: {
     fields: [
       {id: "id", name: "#", readonly: true},
+      {id: "title", name: "Название"},
       {id: "start", name: "Начало", type: "datetime"},
       {id: "end", name: "Конец", type: "datetime"},
-      {id: "title", name: "Название"},
-      {id: "description", name: "Примечание", type: "textarea"},
-      {id: "created_on", name: "Создано", type: "datetime"},
-      {id: "updated_on", name: "Изменено", type: "datetime"},
+//      {id: "created_on", name: "Создано", type: "datetime", readonly: true},
+//      {id: "updated_on", name: "Изменено", type: "datetime", readonly: true},
       {id: "rule", name: "Правило", type: "ref", ref: "rule"},
       {id: "end_recurring_period", name: "Конец повторения", type: "datetime"},
-      {id: "color_event", name: "Цвет"},
+      {id: "description", name: "Примечание", type: "textarea"},
+//      {id: "color_event", name: "Цвет"},
     ],
     strings: {
-      page_header: "Событие",
+      page_header: "События",
       add_label: "Добавить событие",
       edit_label: "Редактировать событие",
       add_label_short: "Добавить",
       update_label_short: "Обновить",
       delete_label_short: "Удалить"
     },
+    name: "title",
     urls: {
       api_root: "http://localhost:5000/api/v0/events/?format=json",
       api_element: "http://localhost:5000/api/v0/events/{0}/?format=json"
+    }
+  },
+
+  occurrence: {
+    fields: [
+      {id: "id", name: "#", readonly: true},
+      {id: "event", name: "Событие", type: "ref", ref: "event"},
+      {id: "title", name: "Название"},
+      {id: "start", name: "Начало", type: "datetime"},
+      {id: "end", name: "Конец", type: "datetime"},
+      {id: "original_start", name: "Исходное начало", type: "datetime"},
+      {id: "original_end", name: "Исходный конец", type: "datetime"},
+//      {id: "created_on", name: "Создано", type: "datetime", readonly: true},
+//      {id: "updated_on", name: "Изменено", type: "datetime", readonly: true},
+      {id: "description", name: "Примечание", type: "textarea"},
+//      {id: "color_event", name: "Цвет"},
+    ],
+    strings: {
+      page_header: "Случаи",
+      add_label: "Добавить случай",
+      edit_label: "Редактировать случай",
+      add_label_short: "Добавить",
+      update_label_short: "Обновить",
+      delete_label_short: "Удалить"
+    },
+    urls: {
+      api_root: "http://localhost:5000/api/v0/occurrences/?format=json",
+      api_element: "http://localhost:5000/api/v0/occurrences/{0}/?format=json"
     }
   },
 
@@ -165,7 +194,7 @@ var SCHEMA = {
       {id: "params", name: "Параметры"},
     ],
     strings: {
-      page_header: "Клиенты",
+      page_header: "Правила",
       add_label: "Добавить правило",
       edit_label: "Редактировать правило",
       add_label_short: "Добавить",

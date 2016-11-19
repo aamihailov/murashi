@@ -1,5 +1,6 @@
 from rest_framework import viewsets, permissions
 from .serializers import *
+from schedule.periods import Period
 
 
 class IsOwner(permissions.BasePermission):
@@ -82,6 +83,18 @@ class EventsViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(creator=self.request.user)
+
+
+class OccurrencesViewSet(viewsets.ModelViewSet):
+    serializer_class = OccurrenceSerializer
+    permission_classes = (permissions.IsAuthenticated, )
+
+    def get_queryset(self):
+        start = datetime.datetime(2016, 1, 1)
+        today = datetime.datetime.now()
+        my_events = Calendar.objects.get(pk=1).events.all()
+        my_occurrences = Period(my_events, start, today+datetime.timedelta(days=1000))
+        return my_occurrences.get_occurrences()
 
 
 class RulesViewSet(viewsets.ModelViewSet):
