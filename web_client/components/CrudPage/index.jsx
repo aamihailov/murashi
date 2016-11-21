@@ -1,7 +1,7 @@
 import React from 'react'
 import { PageHeader, Table } from 'react-bootstrap'
 import { Form, FormGroup, Col, FormControl, Button, ButtonToolbar, ControlLabel } from 'react-bootstrap'
-import { Modal, Popover } from 'react-bootstrap'
+import { Modal, Popover, Checkbox } from 'react-bootstrap'
 import cookie from 'react-cookie';
 import update from 'immutability-helper';
 
@@ -40,13 +40,15 @@ var MyTableRow = React.createClass({
         case 'ref':
           if (data[el.ref].loaded) {
             var ref = data[el.ref].dataList[rowData[el.id]];
-            console.log(schema[el.ref].name);
             v = ref ? schema[el.ref].name ? ref[schema[el.ref].name] : ref.name : null;
           }
           break;
         case 'datetime':
           v = rowData[el.id] ? moment(rowData[el.id]).format('dddd, DD.MM.YYYY, HH:mm:ss') : null;
           break
+        case 'bool':
+          v = rowData[el.id] ? 'отмена' : '';
+          break;
         default:
           v = rowData[el.id];
           break;
@@ -102,6 +104,9 @@ var MyAddFormRow = React.createClass({
                     onChange={m=>{handleChange({target:{id:id, type:'datetime', value:m.format()}});}}
           />
         );
+        break;
+      case 'bool':
+        control = <Checkbox value={value}/>;
         break;
       case 'ref':
         var formOptions = [];
@@ -160,17 +165,17 @@ var MyAddForm = React.createClass({
     }
   },
 
-  handleCreate(e) {
+  fetchCreateUpdate(url, method, formData) {
     this.setState({wrongFields: {}});
-    fetch(this.props.urls.api_root, {
-      method: 'POST',
+    fetch(url, {
+      method: method,
       credentials: 'include',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
         'X-CSRFToken': cookie.load('csrftoken')
       },
-      body: JSON.stringify(this.state.formData)})
+      body: JSON.stringify(formData)})
     .then((response) => {
       if (response.ok) {
         this.props.handleClose()
@@ -185,30 +190,17 @@ var MyAddForm = React.createClass({
     });
   },
 
-  handleUpdate(id) {
-    this.setState({wrongFields: {}});
-    fetch(Format(this.props.urls.api_element, this.props.dataElement.id), {
-      method: 'PUT',
-      credentials: 'include',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'X-CSRFToken': cookie.load('csrftoken')
-      },
-      body: JSON.stringify(this.props.dataElement)
-    })
-    .then((response) => {
-      if (response.ok) {
-        this.props.handleClose()
-      } else {
-        response.json().then((data) => {
-          this.setState({wrongFields: data});
-        })
-      }
-    })
-    .catch((error) => {
-      console.error(error);
-    });
+  handleCreate(e) {
+    this.fetchCreateUpdate(this.props.urls.api_root, 'POST', this.state.formData);
+  },
+
+  handleUpdate(e) {
+    var id = this.props.dataElement.id;
+    if (id && id > 0) {
+      this.fetchCreateUpdate(Format(this.props.urls.api_element, id), 'PUT', this.props.dataElement);
+    } else {
+      this.fetchCreateUpdate(this.props.urls.api_root, 'POST', this.props.dataElement);
+    }
   },
 
   handleDelete(id) {
@@ -227,7 +219,7 @@ var MyAddForm = React.createClass({
 
   render(){
     var controls = [];
-    var {schema, model} = this.props;
+    var {schema, model, data} = this.props;
     var handleChange = this.handleChange;
 
     var dataElement = this.props.dataElement ? this.props.dataElement : {};
@@ -245,7 +237,7 @@ var MyAddForm = React.createClass({
             schema={schema}
             value={editValue}
             handleChange={handleChange}
-            data={this.props.data}
+            data={data}
           />
         );
       }

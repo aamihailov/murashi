@@ -162,6 +162,7 @@ var SCHEMA = {
       {id: "id", name: "#", readonly: true},
       {id: "event", name: "Событие", type: "ref", ref: "event"},
       {id: "title", name: "Название"},
+      {id: "cancelled", name: "Отменено", type: "bool"},
       {id: "start", name: "Начало", type: "datetime"},
       {id: "end", name: "Конец", type: "datetime"},
       {id: "original_start", name: "Исходное начало", type: "datetime"},

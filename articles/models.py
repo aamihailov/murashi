@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
+from schedule.models import Event, Occurrence
 
 
 class Client(models.Model):
@@ -97,3 +98,37 @@ class Group(models.Model):
         ordering = ['id']
         verbose_name = _('group')
         verbose_name_plural = _('groups')
+
+
+class Traintemplate(models.Model):
+    owner = models.ForeignKey(User, related_name='own_traintemplates')
+    event = models.OneToOneField(Event, related_name='traintemplate')
+    group = models.ForeignKey(Group, null=True)
+    trainer = models.ForeignKey(Trainer, null=True)
+    client = models.ManyToManyField(Client)
+    location = models.ForeignKey(Location, null=True)
+
+    def __unicode__(self):
+        return self.event.title
+
+    class Meta:
+        ordering = ['id']
+        verbose_name = _('traintemplate')
+        verbose_name_plural = _('traintemplates')
+
+
+class Train(models.Model):
+    owner = models.ForeignKey(User, related_name='own_trains')
+    occurrence = models.OneToOneField(Occurrence, related_name='train')
+    group = models.ForeignKey(Group, null=True)
+    trainer = models.ForeignKey(Trainer, null=True)
+    client = models.ManyToManyField(Client)
+    location = models.ForeignKey(Location, null=True)
+
+    def __unicode__(self):
+        return self.occurrence.title
+
+    class Meta:
+        ordering = ['id']
+        verbose_name = _('train')
+        verbose_name_plural = _('trains')

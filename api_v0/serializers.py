@@ -106,6 +106,7 @@ class OccurrenceSerializer(serializers.ModelSerializer):
             'id',
             'event',
             'title',
+            'cancelled',
             'description',
             'start',
             'end',
