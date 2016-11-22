@@ -96,7 +96,7 @@ var MyAddFormRow = React.createClass({
 
     switch(type) {
       case 'textarea':
-        control = <FormControl componentClass='textarea' placeholder={name} value={value ? value : ''}/>;
+        control = <FormControl componentClass='textarea' placeholder={name} defaultValue={value ? value : ''}/>;
         break;
       case 'datetime':
         control = (
@@ -106,11 +106,12 @@ var MyAddFormRow = React.createClass({
         );
         break;
       case 'bool':
-        control = <Checkbox value={value}/>;
+        control = <input type="checkbox" defaultChecked={value}
+                    onChange={m=>{handleChange({target:{id:id, type:'checkbox', value:m.target.checked}})}} />;
         break;
       case 'ref':
         var formOptions = [];
-        formOptions.push(<option key={0} value={0}>{'...'}</option>);
+        formOptions.push(<option key={0} value={''}>{'...'}</option>);
         if (data[id].loaded) {
           data[id].dataList.forEach((el) => {
             formOptions.push(
@@ -119,13 +120,13 @@ var MyAddFormRow = React.createClass({
           });
         }
         control = (
-          <FormControl componentClass='select' placeholder={name} value={value}>
+          <FormControl componentClass='select' placeholder={name} defaultValue={value}>
             {formOptions}
           </FormControl>
         );
         break;
       default:
-        control = <FormControl type='text' placeholder={name} value={value}/>;
+        control = <FormControl type='text' placeholder={name} defaultValue={value}/>;
         break;
     }
 
@@ -152,11 +153,7 @@ var MyAddForm = React.createClass({
   handleChange(e) {
     if (this.props.dataElement) {
       var dataElement = this.props.dataElement;
-      if (e.target.type == 'select-one' && e.target.value == 0) {
-        dataElement[e.target.id] = '';
-      } else {
-        dataElement[e.target.id] = e.target.value;
-      }
+      dataElement[e.target.id] = e.target.value;
       this.props.handleEdit(dataElement);
     } else {
       var formData = this.state.formData;
