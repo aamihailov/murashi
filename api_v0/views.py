@@ -104,8 +104,31 @@ class OccurrencesViewSet(viewsets.ModelViewSet):
         start = datetime.datetime(2016, 1, 1)
         today = datetime.datetime.now()
         my_events = Calendar.objects.get(pk=1).events.all()
-        my_occurrences = Period(my_events, start, today+datetime.timedelta(days=1000))
+        my_occurrences = Period(my_events, start, today+datetime.timedelta(days=365))
         return my_occurrences.get_occurrences()
+
+
+class TrainViewSet(viewsets.ModelViewSet):
+    serializer_class = TrainSerializer
+    permission_classes = (permissions.IsAuthenticated, )
+
+    def get_queryset(self):
+        start = datetime.datetime(2016, 1, 1)
+        today = datetime.datetime.now()
+        my_events = Calendar.objects.get(pk=1).events.all()
+        my_occurrences = Period(my_events, start, today+datetime.timedelta(days=365))
+        trains = []
+        for occ in my_occurrences.get_occurrences():
+            if occ.id:
+                trains.append(occ.train)
+            else:
+                template = occ.event.traintemplate
+                train = Train(occurrence=occ,
+                              group=template.group,
+                              trainer=template.trainer,
+                              location=template.location)
+                trains.append(train)
+        return trains
 
 
 class RulesViewSet(viewsets.ModelViewSet):

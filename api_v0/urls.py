@@ -13,8 +13,9 @@ router.register(r'subscriptions', SubscriptionViewSet, base_name='subscription')
 router.register(r'groups', GroupsViewSet, base_name='group')
 router.register(r'events', EventsViewSet, base_name='event')
 router.register(r'traintemplates', TraintemplatesViewSet, base_name='traintemplate')
-router.register(r'rules', RulesViewSet, base_name='rule')
 router.register(r'occurrences', OccurrencesViewSet, base_name='occerrence')
+router.register(r'trains', TrainViewSet, base_name='train')
+router.register(r'rules', RulesViewSet, base_name='rule')
 
 
 urlpatterns = router.urls

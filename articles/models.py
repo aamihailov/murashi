@@ -105,7 +105,6 @@ class Traintemplate(models.Model):
     event = models.OneToOneField(Event, related_name='traintemplate')
     group = models.ForeignKey(Group, null=True)
     trainer = models.ForeignKey(Trainer, null=True)
-    client = models.ManyToManyField(Client)
     location = models.ForeignKey(Location, null=True)
 
     def __unicode__(self):
@@ -121,7 +120,6 @@ class Train(models.Model):
     occurrence = models.OneToOneField(Occurrence, related_name='train')
     group = models.ForeignKey(Group, null=True)
     trainer = models.ForeignKey(Trainer, null=True)
-    client = models.ManyToManyField(Client)
     location = models.ForeignKey(Location, null=True)
 
     def __unicode__(self):

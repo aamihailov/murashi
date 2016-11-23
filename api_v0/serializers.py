@@ -114,7 +114,6 @@ class TraintemplateSerializer(serializers.ModelSerializer):
             'event',
             'group',
             'trainer',
-            'client',
             'location',
             'url',
         ]
@@ -140,7 +139,6 @@ class TraintemplateSerializer(serializers.ModelSerializer):
 
         instance.group = validated_data.get('group', instance.group)
         instance.trainer = validated_data.get('trainer', instance.group)
-        instance.client = validated_data.get('client', instance.group)
         instance.location = validated_data.get('location', instance.group)
         instance.save()
         return instance
@@ -163,6 +161,41 @@ class OccurrenceSerializer(serializers.ModelSerializer):
             'updated_on',
             # 'url',
         ]
+
+
+class TrainSerializer(serializers.ModelSerializer):
+    occurrence = OccurrenceSerializer()
+
+    class Meta:
+        model = Train
+        fields = [
+            'id',
+            'occurrence',
+            'group',
+            'trainer',
+            'location',
+            # 'url',
+        ]
+
+    def update(self, instance, validated_data):
+        occurrence_data = validated_data.pop('occurrence')
+        occurrence = instance.occurrence
+
+        occurrence.start = occurrence_data.get('start', occurrence.start)
+        occurrence.end = occurrence_data.get('end', occurrence.start)
+        occurrence.title = occurrence_data.get('title', occurrence.start)
+        occurrence.description = occurrence_data.get('description', occurrence.start)
+        occurrence.rule = occurrence_data.get('rule', occurrence.start)
+        occurrence.end_recurring_period = occurrence_data.get('end_recurring_period', occurrence.start)
+        occurrence.color_event = occurrence_data.get('color_event', occurrence.start)
+        occurrence.save()
+
+        instance.group = validated_data.get('group', instance.group)
+        instance.trainer = validated_data.get('trainer', instance.group)
+        instance.client = validated_data.get('client', instance.group)
+        instance.location = validated_data.get('location', instance.group)
+        instance.save()
+        return instance
 
 
 class RuleSerializer(serializers.ModelSerializer):
