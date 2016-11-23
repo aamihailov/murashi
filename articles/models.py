@@ -118,7 +118,6 @@ class Traintemplate(models.Model):
 
 
 class Train(models.Model):
-    owner = models.ForeignKey(User, related_name='own_trains')
     occurrence = models.OneToOneField(Occurrence, related_name='train')
     group = models.ForeignKey(Group, null=True)
     trainer = models.ForeignKey(Trainer, null=True)

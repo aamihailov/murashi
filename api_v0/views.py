@@ -85,6 +85,17 @@ class EventsViewSet(viewsets.ModelViewSet):
         serializer.save(creator=self.request.user)
 
 
+class TraintemplatesViewSet(viewsets.ModelViewSet):
+    serializer_class = TraintemplateSerializer
+    permission_classes = (permissions.IsAuthenticated, IsOwner)
+
+    def get_queryset(self):
+        return self.request.user.own_traintemplates.all()
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
+
 class OccurrencesViewSet(viewsets.ModelViewSet):
     serializer_class = OccurrenceSerializer
     permission_classes = (permissions.IsAuthenticated, )
